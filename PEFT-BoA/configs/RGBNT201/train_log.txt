@@ -1,0 +1,2270 @@
+2026-01-19 04:05:47,719 BoA INFO: Saving model in the path :..
+2026-01-19 04:05:47,722 BoA INFO: Namespace(config_file='configs/RGBNT201/PEFT-BoA.yml', fea_cft=0, opts=[], local_rank=0)
+2026-01-19 04:05:47,722 BoA INFO: Loaded configuration file configs/RGBNT201/PEFT-BoA.yml
+2026-01-19 04:05:47,722 BoA INFO: 
+MODEL:
+  PRETRAIN_PATH_T: '../../ViT-B-16.pt'
+  TRANSFORMER_TYPE: 'ViT-B-16'
+  STRIDE_SIZE: [ 16, 16 ]
+  SIE_CAMERA: True
+  DIRECT: 1
+  SIE_COE: 1.0
+  ID_LOSS_WEIGHT: 0.25
+  TRIPLET_LOSS_WEIGHT: 1.0
+  FROZEN: True
+
+INPUT:
+  SIZE_TRAIN: [ 256, 128 ]
+  SIZE_TEST: [ 256, 128 ]
+  PROB: 0.5 # random horizontal flip
+  RE_PROB: 0.5 # random erasing
+  PADDING: 10
+
+DATALOADER:
+  SAMPLER: 'softmax_triplet'
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8 # or 14
+
+DATASETS:
+  NAMES: ('RGBNT201')
+  ROOT_DIR: '../../'
+
+SOLVER:
+  BASE_LR: 0.0003
+  WARMUP_ITERS: 10
+  MAX_EPOCHS: 120
+  OPTIMIZER_NAME: 'AdamW'
+  GAMMA: 0.1
+  IMS_PER_BATCH: 64
+
+TEST:
+  IMS_PER_BATCH: 64
+  RE_RANKING: 'no'
+  WEIGHT: ''
+  NECK_FEAT: 'before'
+  FEAT_NORM: 'yes'
+  MISS: "nothing"
+
+OUTPUT_DIR: '..'
+
+
+
+2026-01-19 04:05:47,722 BoA INFO: Running with config:
+DATALOADER:
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 8
+  SAMPLER: softmax_triplet
+DATASETS:
+  NAMES: RGBNT201
+  ROOT_DIR: ../../
+INPUT:
+  PADDING: 10
+  PIXEL_MEAN: [0.5, 0.5, 0.5]
+  PIXEL_STD: [0.5, 0.5, 0.5]
+  PROB: 0.5
+  RE_PROB: 0.5
+  SIZE_TEST: [256, 128]
+  SIZE_TRAIN: [256, 128]
+MODEL:
+  ATT_DROP_RATE: 0.0
+  DEVICE: cuda
+  DEVICE_ID: 0
+  DIRECT: 1
+  DIST_TRAIN: False
+  DROP_OUT: 0.0
+  DROP_PATH: 0.1
+  FLOPS_TEST: False
+  FROZEN: True
+  ID_LOSS_TYPE: softmax
+  ID_LOSS_WEIGHT: 0.25
+  IF_LABELSMOOTH: on
+  IF_WITH_CENTER: no
+  METRIC_LOSS_TYPE: triplet
+  NAME: BoA
+  NECK: bnneck
+  NO_MARGIN: True
+  PREFIX_NUM: 1
+  PRETRAIN_PATH_T: ../../ViT-B-16.pt
+  SIE_CAMERA: True
+  SIE_COE: 1.0
+  SIE_VIEW: False
+  STRIDE_SIZE: [16, 16]
+  TRANSFORMER_TYPE: ViT-B-16
+  TRIPLET_LOSS_WEIGHT: 1.0
+OUTPUT_DIR: ..
+SOLVER:
+  BASE_LR: 0.0003
+  BIAS_LR_FACTOR: 2
+  CENTER_LOSS_WEIGHT: 0.0005
+  CENTER_LR: 0.5
+  CHECKPOINT_PERIOD: 60
+  CLUSTER_MARGIN: 0.3
+  COSINE_MARGIN: 0.5
+  COSINE_SCALE: 30
+  EVAL_PERIOD: 1
+  GAMMA: 0.1
+  IMS_PER_BATCH: 64
+  LARGE_FC_LR: False
+  LOG_PERIOD: 10
+  MARGIN: 0.3
+  MAX_EPOCHS: 120
+  MOMENTUM: 0.9
+  OPTIMIZER_NAME: AdamW
+  RANGE_ALPHA: 0
+  RANGE_BETA: 1
+  RANGE_K: 2
+  RANGE_LOSS_WEIGHT: 1
+  RANGE_MARGIN: 0.3
+  SEED: 1111
+  STEPS: (40, 70)
+  WARMUP_FACTOR: 0.01
+  WARMUP_ITERS: 10
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0.0001
+TEST:
+  FEAT: 0
+  FEAT_NORM: yes
+  IMS_PER_BATCH: 64
+  MISS: nothing
+  NECK_FEAT: before
+  RE_RANKING: no
+  WEIGHT: 
+2026-01-19 04:05:49,291 BoA INFO: BoA(
+  (BACKBONE): build_transformer(
+    (base): VisionTransformer(
+      (conv1): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16), bias=False)
+      (ln_pre): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+      (transformer): Transformer(
+        (trainable_tca): Sequential(
+          (0): Linear(in_features=768, out_features=1536, bias=True)
+          (1): GELU(approximate='none')
+          (2): Linear(in_features=1536, out_features=768, bias=True)
+        )
+        (resblocks): Sequential(
+          (0): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (1): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (2): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (3): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (4): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (5): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (6): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (7): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (8): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (9): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (10): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+          (11): ResidualAttentionBlockWithAdapter(
+            (attn): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=768, out_features=768, bias=True)
+            )
+            (ln_1): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (mlp): Sequential(
+              (c_fc): Linear(in_features=768, out_features=3072, bias=True)
+              (gelu): QuickGELU()
+              (c_proj): Linear(in_features=3072, out_features=768, bias=True)
+            )
+            (ln_2): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (trainable_dpa_down_proj): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_down_proj_gate): Linear(in_features=768, out_features=96, bias=True)
+            (trainable_dpa_up_proj): Linear(in_features=96, out_features=768, bias=True)
+            (trainable_shared_tca): Sequential(
+              (0): Linear(in_features=768, out_features=1536, bias=True)
+              (1): GELU(approximate='none')
+              (2): Linear(in_features=1536, out_features=768, bias=True)
+            )
+          )
+        )
+        (trainable_early_fusion): Sequential(
+          (0): Nothing()
+          (1): Nothing()
+          (2): IFA(
+            (ln_rgb): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (ln_nir): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (ln_tir): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (down_q_rgb): Linear(in_features=768, out_features=96, bias=True)
+            (down_q_nir): Linear(in_features=768, out_features=96, bias=True)
+            (down_q_tir): Linear(in_features=768, out_features=96, bias=True)
+            (gate_q_rgb): Linear(in_features=768, out_features=96, bias=True)
+            (gate_q_nir): Linear(in_features=768, out_features=96, bias=True)
+            (gate_q_tir): Linear(in_features=768, out_features=96, bias=True)
+            (down_kv_rgb): Linear(in_features=768, out_features=96, bias=True)
+            (down_kv_nir): Linear(in_features=768, out_features=96, bias=True)
+            (down_kv_tir): Linear(in_features=768, out_features=96, bias=True)
+            (gate_kv_rgb): Linear(in_features=768, out_features=96, bias=True)
+            (gate_kv_nir): Linear(in_features=768, out_features=96, bias=True)
+            (gate_kv_tir): Linear(in_features=768, out_features=96, bias=True)
+            (up_rgb): Linear(in_features=96, out_features=768, bias=True)
+            (up_nir): Linear(in_features=96, out_features=768, bias=True)
+            (up_tir): Linear(in_features=96, out_features=768, bias=True)
+            (attn_rgb): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=96, out_features=96, bias=True)
+            )
+            (attn_nir): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=96, out_features=96, bias=True)
+            )
+            (attn_tir): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=96, out_features=96, bias=True)
+            )
+          )
+          (3): IFA(
+            (ln_rgb): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (ln_nir): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (ln_tir): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+            (down_q_rgb): Linear(in_features=768, out_features=96, bias=True)
+            (down_q_nir): Linear(in_features=768, out_features=96, bias=True)
+            (down_q_tir): Linear(in_features=768, out_features=96, bias=True)
+            (gate_q_rgb): Linear(in_features=768, out_features=96, bias=True)
+            (gate_q_nir): Linear(in_features=768, out_features=96, bias=True)
+            (gate_q_tir): Linear(in_features=768, out_features=96, bias=True)
+            (down_kv_rgb): Linear(in_features=768, out_features=96, bias=True)
+            (down_kv_nir): Linear(in_features=768, out_features=96, bias=True)
+            (down_kv_tir): Linear(in_features=768, out_features=96, bias=True)
+            (gate_kv_rgb): Linear(in_features=768, out_features=96, bias=True)
+            (gate_kv_nir): Linear(in_features=768, out_features=96, bias=True)
+            (gate_kv_tir): Linear(in_features=768, out_features=96, bias=True)
+            (up_rgb): Linear(in_features=96, out_features=768, bias=True)
+            (up_nir): Linear(in_features=96, out_features=768, bias=True)
+            (up_tir): Linear(in_features=96, out_features=768, bias=True)
+            (attn_rgb): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=96, out_features=96, bias=True)
+            )
+            (attn_nir): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=96, out_features=96, bias=True)
+            )
+            (attn_tir): MultiheadAttention(
+              (out_proj): NonDynamicallyQuantizableLinear(in_features=96, out_features=96, bias=True)
+            )
+          )
+          (4): Nothing()
+          (5): Nothing()
+          (6): Nothing()
+          (7): Nothing()
+          (8): Nothing()
+          (9): Nothing()
+          (10): Nothing()
+          (11): Nothing()
+        )
+      )
+      (ln_post): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+    )
+    (classifier): Linear(in_features=768, out_features=171, bias=False)
+    (bottleneck): BatchNorm1d(768, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (classifier): Linear(in_features=2304, out_features=171, bias=False)
+  (bottleneck): BatchNorm1d(2304, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (ln_rgb): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+  (ln_nir): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+  (ln_tir): LayerNorm((768,), eps=1e-05, elementwise_affine=True)
+)
+2026-01-19 04:05:49,292 BoA INFO: number of parameters:8.03328
+2026-01-19 04:05:50,242 BoA INFO: number of GFLOPs: 31.516754883000004
+2026-01-19 04:05:50,264 BoA.train INFO: start training
+2026-01-19 04:05:53,733 BoA.train INFO: Epoch[1] Iteration[10/59] Loss: 3.096, Acc: 0.027, Base Lr: 3.27e-05
+2026-01-19 04:05:56,192 BoA.train INFO: Epoch[1] Iteration[20/59] Loss: 2.667, Acc: 0.069, Base Lr: 3.27e-05
+2026-01-19 04:05:58,717 BoA.train INFO: Epoch[1] Iteration[30/59] Loss: 2.481, Acc: 0.116, Base Lr: 3.27e-05
+2026-01-19 04:06:01,228 BoA.train INFO: Epoch[1] Iteration[40/59] Loss: 2.375, Acc: 0.147, Base Lr: 3.27e-05
+2026-01-19 04:06:03,680 BoA.train INFO: Epoch[1] Iteration[50/59] Loss: 2.304, Acc: 0.202, Base Lr: 3.27e-05
+2026-01-19 04:06:05,447 BoA.train INFO: Epoch 1 done. Time per batch: 0.266[s] Speed: 240.3[samples/s]
+2026-01-19 04:06:11,293 BoA.train INFO: Validation Results - Epoch: 1
+2026-01-19 04:06:11,293 BoA.train INFO: mAP: 4.6%
+2026-01-19 04:06:11,293 BoA.train INFO: CMC curve, Rank-1  :1.8%
+2026-01-19 04:06:11,293 BoA.train INFO: CMC curve, Rank-5  :6.1%
+2026-01-19 04:06:11,293 BoA.train INFO: CMC curve, Rank-10 :10.2%
+2026-01-19 04:06:11,610 BoA.train INFO: Best mAP: 4.6%
+2026-01-19 04:06:11,610 BoA.train INFO: Best Rank-1: 1.8%
+2026-01-19 04:06:11,610 BoA.train INFO: Best Rank-5: 6.1%
+2026-01-19 04:06:11,610 BoA.train INFO: Best Rank-10: 10.2%
+2026-01-19 04:06:15,017 BoA.train INFO: Epoch[2] Iteration[10/59] Loss: 1.913, Acc: 0.666, Base Lr: 6.24e-05
+2026-01-19 04:06:17,466 BoA.train INFO: Epoch[2] Iteration[20/59] Loss: 1.834, Acc: 0.680, Base Lr: 6.24e-05
+2026-01-19 04:06:19,932 BoA.train INFO: Epoch[2] Iteration[30/59] Loss: 1.788, Acc: 0.660, Base Lr: 6.24e-05
+2026-01-19 04:06:22,387 BoA.train INFO: Epoch[2] Iteration[40/59] Loss: 1.745, Acc: 0.661, Base Lr: 6.24e-05
+2026-01-19 04:06:24,822 BoA.train INFO: Epoch[2] Iteration[50/59] Loss: 1.709, Acc: 0.653, Base Lr: 6.24e-05
+2026-01-19 04:06:26,617 BoA.train INFO: Epoch 2 done. Time per batch: 0.260[s] Speed: 246.0[samples/s]
+2026-01-19 04:06:32,510 BoA.train INFO: Validation Results - Epoch: 2
+2026-01-19 04:06:32,511 BoA.train INFO: mAP: 29.4%
+2026-01-19 04:06:32,511 BoA.train INFO: CMC curve, Rank-1  :27.6%
+2026-01-19 04:06:32,511 BoA.train INFO: CMC curve, Rank-5  :44.9%
+2026-01-19 04:06:32,511 BoA.train INFO: CMC curve, Rank-10 :53.8%
+2026-01-19 04:06:32,853 BoA.train INFO: Best mAP: 29.4%
+2026-01-19 04:06:32,853 BoA.train INFO: Best Rank-1: 27.6%
+2026-01-19 04:06:32,853 BoA.train INFO: Best Rank-5: 44.9%
+2026-01-19 04:06:32,853 BoA.train INFO: Best Rank-10: 53.8%
+2026-01-19 04:06:36,407 BoA.train INFO: Epoch[3] Iteration[10/59] Loss: 1.307, Acc: 0.861, Base Lr: 9.21e-05
+2026-01-19 04:06:39,049 BoA.train INFO: Epoch[3] Iteration[20/59] Loss: 1.254, Acc: 0.838, Base Lr: 9.21e-05
+2026-01-19 04:06:41,668 BoA.train INFO: Epoch[3] Iteration[30/59] Loss: 1.231, Acc: 0.810, Base Lr: 9.21e-05
+2026-01-19 04:06:44,248 BoA.train INFO: Epoch[3] Iteration[40/59] Loss: 1.210, Acc: 0.813, Base Lr: 9.21e-05
+2026-01-19 04:06:46,770 BoA.train INFO: Epoch[3] Iteration[50/59] Loss: 1.191, Acc: 0.807, Base Lr: 9.21e-05
+2026-01-19 04:06:48,582 BoA.train INFO: Epoch 3 done. Time per batch: 0.272[s] Speed: 234.9[samples/s]
+2026-01-19 04:06:54,517 BoA.train INFO: Validation Results - Epoch: 3
+2026-01-19 04:06:54,517 BoA.train INFO: mAP: 49.2%
+2026-01-19 04:06:54,517 BoA.train INFO: CMC curve, Rank-1  :50.1%
+2026-01-19 04:06:54,517 BoA.train INFO: CMC curve, Rank-5  :64.7%
+2026-01-19 04:06:54,517 BoA.train INFO: CMC curve, Rank-10 :72.4%
+2026-01-19 04:06:54,832 BoA.train INFO: Best mAP: 49.2%
+2026-01-19 04:06:54,832 BoA.train INFO: Best Rank-1: 50.1%
+2026-01-19 04:06:54,832 BoA.train INFO: Best Rank-5: 64.7%
+2026-01-19 04:06:54,832 BoA.train INFO: Best Rank-10: 72.4%
+2026-01-19 04:06:58,230 BoA.train INFO: Epoch[4] Iteration[10/59] Loss: 0.917, Acc: 0.914, Base Lr: 1.22e-04
+2026-01-19 04:07:00,742 BoA.train INFO: Epoch[4] Iteration[20/59] Loss: 0.862, Acc: 0.923, Base Lr: 1.22e-04
+2026-01-19 04:07:03,237 BoA.train INFO: Epoch[4] Iteration[30/59] Loss: 0.803, Acc: 0.925, Base Lr: 1.22e-04
+2026-01-19 04:07:05,740 BoA.train INFO: Epoch[4] Iteration[40/59] Loss: 0.784, Acc: 0.926, Base Lr: 1.22e-04
+2026-01-19 04:07:08,192 BoA.train INFO: Epoch[4] Iteration[50/59] Loss: 0.767, Acc: 0.925, Base Lr: 1.22e-04
+2026-01-19 04:07:09,975 BoA.train INFO: Epoch 4 done. Time per batch: 0.263[s] Speed: 243.8[samples/s]
+2026-01-19 04:07:15,889 BoA.train INFO: Validation Results - Epoch: 4
+2026-01-19 04:07:15,889 BoA.train INFO: mAP: 57.0%
+2026-01-19 04:07:15,889 BoA.train INFO: CMC curve, Rank-1  :56.7%
+2026-01-19 04:07:15,889 BoA.train INFO: CMC curve, Rank-5  :71.2%
+2026-01-19 04:07:15,889 BoA.train INFO: CMC curve, Rank-10 :78.9%
+2026-01-19 04:07:16,203 BoA.train INFO: Best mAP: 57.0%
+2026-01-19 04:07:16,203 BoA.train INFO: Best Rank-1: 56.7%
+2026-01-19 04:07:16,203 BoA.train INFO: Best Rank-5: 71.2%
+2026-01-19 04:07:16,203 BoA.train INFO: Best Rank-10: 78.9%
+2026-01-19 04:07:19,641 BoA.train INFO: Epoch[5] Iteration[10/59] Loss: 0.570, Acc: 0.963, Base Lr: 1.51e-04
+2026-01-19 04:07:22,303 BoA.train INFO: Epoch[5] Iteration[20/59] Loss: 0.547, Acc: 0.970, Base Lr: 1.51e-04
+2026-01-19 04:07:24,903 BoA.train INFO: Epoch[5] Iteration[30/59] Loss: 0.517, Acc: 0.976, Base Lr: 1.51e-04
+2026-01-19 04:07:27,493 BoA.train INFO: Epoch[5] Iteration[40/59] Loss: 0.504, Acc: 0.980, Base Lr: 1.51e-04
+2026-01-19 04:07:29,933 BoA.train INFO: Epoch[5] Iteration[50/59] Loss: 0.507, Acc: 0.978, Base Lr: 1.51e-04
+2026-01-19 04:07:31,717 BoA.train INFO: Epoch 5 done. Time per batch: 0.269[s] Speed: 237.9[samples/s]
+2026-01-19 04:07:37,635 BoA.train INFO: Validation Results - Epoch: 5
+2026-01-19 04:07:37,635 BoA.train INFO: mAP: 60.1%
+2026-01-19 04:07:37,635 BoA.train INFO: CMC curve, Rank-1  :60.3%
+2026-01-19 04:07:37,635 BoA.train INFO: CMC curve, Rank-5  :75.5%
+2026-01-19 04:07:37,635 BoA.train INFO: CMC curve, Rank-10 :83.9%
+2026-01-19 04:07:37,945 BoA.train INFO: Best mAP: 60.1%
+2026-01-19 04:07:37,945 BoA.train INFO: Best Rank-1: 60.3%
+2026-01-19 04:07:37,945 BoA.train INFO: Best Rank-5: 75.5%
+2026-01-19 04:07:37,945 BoA.train INFO: Best Rank-10: 83.9%
+2026-01-19 04:07:41,411 BoA.train INFO: Epoch[6] Iteration[10/59] Loss: 0.381, Acc: 0.997, Base Lr: 1.81e-04
+2026-01-19 04:07:43,920 BoA.train INFO: Epoch[6] Iteration[20/59] Loss: 0.383, Acc: 0.998, Base Lr: 1.81e-04
+2026-01-19 04:07:46,407 BoA.train INFO: Epoch[6] Iteration[30/59] Loss: 0.375, Acc: 0.997, Base Lr: 1.81e-04
+2026-01-19 04:07:48,874 BoA.train INFO: Epoch[6] Iteration[40/59] Loss: 0.370, Acc: 0.998, Base Lr: 1.81e-04
+2026-01-19 04:07:51,306 BoA.train INFO: Epoch[6] Iteration[50/59] Loss: 0.375, Acc: 0.997, Base Lr: 1.81e-04
+2026-01-19 04:07:53,090 BoA.train INFO: Epoch 6 done. Time per batch: 0.263[s] Speed: 243.7[samples/s]
+2026-01-19 04:07:58,964 BoA.train INFO: Validation Results - Epoch: 6
+2026-01-19 04:07:58,965 BoA.train INFO: mAP: 63.9%
+2026-01-19 04:07:58,965 BoA.train INFO: CMC curve, Rank-1  :65.0%
+2026-01-19 04:07:58,965 BoA.train INFO: CMC curve, Rank-5  :77.4%
+2026-01-19 04:07:58,965 BoA.train INFO: CMC curve, Rank-10 :83.5%
+2026-01-19 04:07:59,280 BoA.train INFO: Best mAP: 63.9%
+2026-01-19 04:07:59,280 BoA.train INFO: Best Rank-1: 65.0%
+2026-01-19 04:07:59,280 BoA.train INFO: Best Rank-5: 77.4%
+2026-01-19 04:07:59,280 BoA.train INFO: Best Rank-10: 83.5%
+2026-01-19 04:08:02,695 BoA.train INFO: Epoch[7] Iteration[10/59] Loss: 0.339, Acc: 0.998, Base Lr: 2.11e-04
+2026-01-19 04:08:05,192 BoA.train INFO: Epoch[7] Iteration[20/59] Loss: 0.338, Acc: 0.998, Base Lr: 2.11e-04
+2026-01-19 04:08:07,688 BoA.train INFO: Epoch[7] Iteration[30/59] Loss: 0.332, Acc: 0.998, Base Lr: 2.11e-04
+2026-01-19 04:08:10,211 BoA.train INFO: Epoch[7] Iteration[40/59] Loss: 0.334, Acc: 0.998, Base Lr: 2.11e-04
+2026-01-19 04:08:12,640 BoA.train INFO: Epoch[7] Iteration[50/59] Loss: 0.348, Acc: 0.998, Base Lr: 2.11e-04
+2026-01-19 04:08:14,431 BoA.train INFO: Epoch 7 done. Time per batch: 0.263[s] Speed: 243.6[samples/s]
+2026-01-19 04:08:20,346 BoA.train INFO: Validation Results - Epoch: 7
+2026-01-19 04:08:20,346 BoA.train INFO: mAP: 58.9%
+2026-01-19 04:08:20,347 BoA.train INFO: CMC curve, Rank-1  :62.7%
+2026-01-19 04:08:20,347 BoA.train INFO: CMC curve, Rank-5  :74.2%
+2026-01-19 04:08:20,347 BoA.train INFO: CMC curve, Rank-10 :82.8%
+2026-01-19 04:08:20,347 BoA.train INFO: Best mAP: 63.9%
+2026-01-19 04:08:20,347 BoA.train INFO: Best Rank-1: 65.0%
+2026-01-19 04:08:20,347 BoA.train INFO: Best Rank-5: 77.4%
+2026-01-19 04:08:20,347 BoA.train INFO: Best Rank-10: 83.5%
+2026-01-19 04:08:23,793 BoA.train INFO: Epoch[8] Iteration[10/59] Loss: 0.305, Acc: 0.997, Base Lr: 2.41e-04
+2026-01-19 04:08:26,335 BoA.train INFO: Epoch[8] Iteration[20/59] Loss: 0.317, Acc: 0.998, Base Lr: 2.41e-04
+2026-01-19 04:08:28,872 BoA.train INFO: Epoch[8] Iteration[30/59] Loss: 0.320, Acc: 0.998, Base Lr: 2.41e-04
+2026-01-19 04:08:31,401 BoA.train INFO: Epoch[8] Iteration[40/59] Loss: 0.320, Acc: 0.998, Base Lr: 2.41e-04
+2026-01-19 04:08:33,894 BoA.train INFO: Epoch[8] Iteration[50/59] Loss: 0.319, Acc: 0.998, Base Lr: 2.41e-04
+2026-01-19 04:08:35,919 BoA.train INFO: Epoch 8 done. Time per batch: 0.265[s] Speed: 241.1[samples/s]
+2026-01-19 04:08:41,841 BoA.train INFO: Validation Results - Epoch: 8
+2026-01-19 04:08:41,841 BoA.train INFO: mAP: 60.2%
+2026-01-19 04:08:41,841 BoA.train INFO: CMC curve, Rank-1  :60.8%
+2026-01-19 04:08:41,841 BoA.train INFO: CMC curve, Rank-5  :73.4%
+2026-01-19 04:08:41,841 BoA.train INFO: CMC curve, Rank-10 :81.7%
+2026-01-19 04:08:41,841 BoA.train INFO: Best mAP: 63.9%
+2026-01-19 04:08:41,841 BoA.train INFO: Best Rank-1: 65.0%
+2026-01-19 04:08:41,841 BoA.train INFO: Best Rank-5: 77.4%
+2026-01-19 04:08:41,841 BoA.train INFO: Best Rank-10: 83.5%
+2026-01-19 04:08:45,216 BoA.train INFO: Epoch[9] Iteration[10/59] Loss: 0.329, Acc: 1.000, Base Lr: 2.70e-04
+2026-01-19 04:08:47,701 BoA.train INFO: Epoch[9] Iteration[20/59] Loss: 0.320, Acc: 0.998, Base Lr: 2.70e-04
+2026-01-19 04:08:50,166 BoA.train INFO: Epoch[9] Iteration[30/59] Loss: 0.313, Acc: 0.998, Base Lr: 2.70e-04
+2026-01-19 04:08:52,626 BoA.train INFO: Epoch[9] Iteration[40/59] Loss: 0.308, Acc: 0.999, Base Lr: 2.70e-04
+2026-01-19 04:08:55,113 BoA.train INFO: Epoch[9] Iteration[50/59] Loss: 0.308, Acc: 0.999, Base Lr: 2.70e-04
+2026-01-19 04:08:56,881 BoA.train INFO: Epoch 9 done. Time per batch: 0.261[s] Speed: 245.5[samples/s]
+2026-01-19 04:09:02,707 BoA.train INFO: Validation Results - Epoch: 9
+2026-01-19 04:09:02,707 BoA.train INFO: mAP: 67.7%
+2026-01-19 04:09:02,707 BoA.train INFO: CMC curve, Rank-1  :68.2%
+2026-01-19 04:09:02,707 BoA.train INFO: CMC curve, Rank-5  :81.5%
+2026-01-19 04:09:02,707 BoA.train INFO: CMC curve, Rank-10 :87.1%
+2026-01-19 04:09:03,036 BoA.train INFO: Best mAP: 67.7%
+2026-01-19 04:09:03,036 BoA.train INFO: Best Rank-1: 68.2%
+2026-01-19 04:09:03,036 BoA.train INFO: Best Rank-5: 81.5%
+2026-01-19 04:09:03,036 BoA.train INFO: Best Rank-10: 87.1%
+2026-01-19 04:09:06,558 BoA.train INFO: Epoch[10] Iteration[10/59] Loss: 0.309, Acc: 1.000, Base Lr: 2.95e-04
+2026-01-19 04:09:09,245 BoA.train INFO: Epoch[10] Iteration[20/59] Loss: 0.326, Acc: 1.000, Base Lr: 2.95e-04
+2026-01-19 04:09:11,743 BoA.train INFO: Epoch[10] Iteration[30/59] Loss: 0.329, Acc: 0.999, Base Lr: 2.95e-04
+2026-01-19 04:09:14,206 BoA.train INFO: Epoch[10] Iteration[40/59] Loss: 0.352, Acc: 0.999, Base Lr: 2.95e-04
+2026-01-19 04:09:16,649 BoA.train INFO: Epoch[10] Iteration[50/59] Loss: 0.350, Acc: 0.999, Base Lr: 2.95e-04
+2026-01-19 04:09:18,440 BoA.train INFO: Epoch 10 done. Time per batch: 0.267[s] Speed: 239.6[samples/s]
+2026-01-19 04:09:24,342 BoA.train INFO: Validation Results - Epoch: 10
+2026-01-19 04:09:24,342 BoA.train INFO: mAP: 69.3%
+2026-01-19 04:09:24,342 BoA.train INFO: CMC curve, Rank-1  :72.6%
+2026-01-19 04:09:24,342 BoA.train INFO: CMC curve, Rank-5  :83.7%
+2026-01-19 04:09:24,342 BoA.train INFO: CMC curve, Rank-10 :89.2%
+2026-01-19 04:09:24,654 BoA.train INFO: Best mAP: 69.3%
+2026-01-19 04:09:24,654 BoA.train INFO: Best Rank-1: 72.6%
+2026-01-19 04:09:24,654 BoA.train INFO: Best Rank-5: 83.7%
+2026-01-19 04:09:24,654 BoA.train INFO: Best Rank-10: 89.2%
+2026-01-19 04:09:28,171 BoA.train INFO: Epoch[11] Iteration[10/59] Loss: 0.298, Acc: 1.000, Base Lr: 2.94e-04
+2026-01-19 04:09:30,668 BoA.train INFO: Epoch[11] Iteration[20/59] Loss: 0.290, Acc: 0.999, Base Lr: 2.94e-04
+2026-01-19 04:09:33,151 BoA.train INFO: Epoch[11] Iteration[30/59] Loss: 0.289, Acc: 0.999, Base Lr: 2.94e-04
+2026-01-19 04:09:35,665 BoA.train INFO: Epoch[11] Iteration[40/59] Loss: 0.296, Acc: 1.000, Base Lr: 2.94e-04
+2026-01-19 04:09:38,072 BoA.train INFO: Epoch[11] Iteration[50/59] Loss: 0.294, Acc: 1.000, Base Lr: 2.94e-04
+2026-01-19 04:09:39,835 BoA.train INFO: Epoch 11 done. Time per batch: 0.263[s] Speed: 243.2[samples/s]
+2026-01-19 04:09:45,740 BoA.train INFO: Validation Results - Epoch: 11
+2026-01-19 04:09:45,741 BoA.train INFO: mAP: 68.0%
+2026-01-19 04:09:45,741 BoA.train INFO: CMC curve, Rank-1  :68.4%
+2026-01-19 04:09:45,741 BoA.train INFO: CMC curve, Rank-5  :81.1%
+2026-01-19 04:09:45,741 BoA.train INFO: CMC curve, Rank-10 :87.2%
+2026-01-19 04:09:45,741 BoA.train INFO: Best mAP: 69.3%
+2026-01-19 04:09:45,741 BoA.train INFO: Best Rank-1: 72.6%
+2026-01-19 04:09:45,741 BoA.train INFO: Best Rank-5: 83.7%
+2026-01-19 04:09:45,741 BoA.train INFO: Best Rank-10: 89.2%
+2026-01-19 04:09:49,173 BoA.train INFO: Epoch[12] Iteration[10/59] Loss: 0.273, Acc: 1.000, Base Lr: 2.93e-04
+2026-01-19 04:09:51,689 BoA.train INFO: Epoch[12] Iteration[20/59] Loss: 0.273, Acc: 0.999, Base Lr: 2.93e-04
+2026-01-19 04:09:54,206 BoA.train INFO: Epoch[12] Iteration[30/59] Loss: 0.275, Acc: 0.999, Base Lr: 2.93e-04
+2026-01-19 04:09:56,707 BoA.train INFO: Epoch[12] Iteration[40/59] Loss: 0.276, Acc: 1.000, Base Lr: 2.93e-04
+2026-01-19 04:09:59,228 BoA.train INFO: Epoch[12] Iteration[50/59] Loss: 0.282, Acc: 0.999, Base Lr: 2.93e-04
+2026-01-19 04:10:00,982 BoA.train INFO: Epoch 12 done. Time per batch: 0.264[s] Speed: 242.2[samples/s]
+2026-01-19 04:10:06,929 BoA.train INFO: Validation Results - Epoch: 12
+2026-01-19 04:10:06,929 BoA.train INFO: mAP: 71.8%
+2026-01-19 04:10:06,930 BoA.train INFO: CMC curve, Rank-1  :75.1%
+2026-01-19 04:10:06,930 BoA.train INFO: CMC curve, Rank-5  :85.5%
+2026-01-19 04:10:06,930 BoA.train INFO: CMC curve, Rank-10 :90.7%
+2026-01-19 04:10:07,263 BoA.train INFO: Best mAP: 71.8%
+2026-01-19 04:10:07,263 BoA.train INFO: Best Rank-1: 75.1%
+2026-01-19 04:10:07,263 BoA.train INFO: Best Rank-5: 85.5%
+2026-01-19 04:10:07,263 BoA.train INFO: Best Rank-10: 90.7%
+2026-01-19 04:10:10,649 BoA.train INFO: Epoch[13] Iteration[10/59] Loss: 0.286, Acc: 1.000, Base Lr: 2.91e-04
+2026-01-19 04:10:13,089 BoA.train INFO: Epoch[13] Iteration[20/59] Loss: 0.283, Acc: 1.000, Base Lr: 2.91e-04
+2026-01-19 04:10:15,529 BoA.train INFO: Epoch[13] Iteration[30/59] Loss: 0.280, Acc: 1.000, Base Lr: 2.91e-04
+2026-01-19 04:10:17,942 BoA.train INFO: Epoch[13] Iteration[40/59] Loss: 0.276, Acc: 1.000, Base Lr: 2.91e-04
+2026-01-19 04:10:20,346 BoA.train INFO: Epoch[13] Iteration[50/59] Loss: 0.275, Acc: 1.000, Base Lr: 2.91e-04
+2026-01-19 04:10:22,131 BoA.train INFO: Epoch 13 done. Time per batch: 0.258[s] Speed: 248.3[samples/s]
+2026-01-19 04:10:27,990 BoA.train INFO: Validation Results - Epoch: 13
+2026-01-19 04:10:27,990 BoA.train INFO: mAP: 73.4%
+2026-01-19 04:10:27,990 BoA.train INFO: CMC curve, Rank-1  :76.7%
+2026-01-19 04:10:27,991 BoA.train INFO: CMC curve, Rank-5  :85.9%
+2026-01-19 04:10:27,991 BoA.train INFO: CMC curve, Rank-10 :90.2%
+2026-01-19 04:10:28,305 BoA.train INFO: Best mAP: 73.4%
+2026-01-19 04:10:28,306 BoA.train INFO: Best Rank-1: 76.7%
+2026-01-19 04:10:28,306 BoA.train INFO: Best Rank-5: 85.9%
+2026-01-19 04:10:28,306 BoA.train INFO: Best Rank-10: 90.2%
+2026-01-19 04:10:31,676 BoA.train INFO: Epoch[14] Iteration[10/59] Loss: 0.274, Acc: 1.000, Base Lr: 2.90e-04
+2026-01-19 04:10:34,142 BoA.train INFO: Epoch[14] Iteration[20/59] Loss: 0.267, Acc: 1.000, Base Lr: 2.90e-04
+2026-01-19 04:10:36,595 BoA.train INFO: Epoch[14] Iteration[30/59] Loss: 0.266, Acc: 1.000, Base Lr: 2.90e-04
+2026-01-19 04:10:39,052 BoA.train INFO: Epoch[14] Iteration[40/59] Loss: 0.265, Acc: 1.000, Base Lr: 2.90e-04
+2026-01-19 04:10:41,481 BoA.train INFO: Epoch[14] Iteration[50/59] Loss: 0.266, Acc: 1.000, Base Lr: 2.90e-04
+2026-01-19 04:10:43,229 BoA.train INFO: Epoch 14 done. Time per batch: 0.258[s] Speed: 248.1[samples/s]
+2026-01-19 04:10:49,125 BoA.train INFO: Validation Results - Epoch: 14
+2026-01-19 04:10:49,125 BoA.train INFO: mAP: 74.8%
+2026-01-19 04:10:49,125 BoA.train INFO: CMC curve, Rank-1  :80.9%
+2026-01-19 04:10:49,125 BoA.train INFO: CMC curve, Rank-5  :89.2%
+2026-01-19 04:10:49,125 BoA.train INFO: CMC curve, Rank-10 :92.2%
+2026-01-19 04:10:49,440 BoA.train INFO: Best mAP: 74.8%
+2026-01-19 04:10:49,440 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:10:49,440 BoA.train INFO: Best Rank-5: 89.2%
+2026-01-19 04:10:49,440 BoA.train INFO: Best Rank-10: 92.2%
+2026-01-19 04:10:52,870 BoA.train INFO: Epoch[15] Iteration[10/59] Loss: 0.248, Acc: 1.000, Base Lr: 2.89e-04
+2026-01-19 04:10:55,368 BoA.train INFO: Epoch[15] Iteration[20/59] Loss: 0.253, Acc: 1.000, Base Lr: 2.89e-04
+2026-01-19 04:10:57,863 BoA.train INFO: Epoch[15] Iteration[30/59] Loss: 0.260, Acc: 1.000, Base Lr: 2.89e-04
+2026-01-19 04:11:00,352 BoA.train INFO: Epoch[15] Iteration[40/59] Loss: 0.265, Acc: 1.000, Base Lr: 2.89e-04
+2026-01-19 04:11:02,808 BoA.train INFO: Epoch[15] Iteration[50/59] Loss: 0.264, Acc: 1.000, Base Lr: 2.89e-04
+2026-01-19 04:11:04,606 BoA.train INFO: Epoch 15 done. Time per batch: 0.262[s] Speed: 244.2[samples/s]
+2026-01-19 04:11:10,549 BoA.train INFO: Validation Results - Epoch: 15
+2026-01-19 04:11:10,549 BoA.train INFO: mAP: 75.0%
+2026-01-19 04:11:10,549 BoA.train INFO: CMC curve, Rank-1  :80.7%
+2026-01-19 04:11:10,549 BoA.train INFO: CMC curve, Rank-5  :88.8%
+2026-01-19 04:11:10,549 BoA.train INFO: CMC curve, Rank-10 :91.9%
+2026-01-19 04:11:10,863 BoA.train INFO: Best mAP: 75.0%
+2026-01-19 04:11:10,863 BoA.train INFO: Best Rank-1: 80.7%
+2026-01-19 04:11:10,863 BoA.train INFO: Best Rank-5: 88.8%
+2026-01-19 04:11:10,863 BoA.train INFO: Best Rank-10: 91.9%
+2026-01-19 04:11:14,243 BoA.train INFO: Epoch[16] Iteration[10/59] Loss: 0.255, Acc: 1.000, Base Lr: 2.87e-04
+2026-01-19 04:11:16,708 BoA.train INFO: Epoch[16] Iteration[20/59] Loss: 0.260, Acc: 1.000, Base Lr: 2.87e-04
+2026-01-19 04:11:19,172 BoA.train INFO: Epoch[16] Iteration[30/59] Loss: 0.261, Acc: 1.000, Base Lr: 2.87e-04
+2026-01-19 04:11:21,623 BoA.train INFO: Epoch[16] Iteration[40/59] Loss: 0.262, Acc: 1.000, Base Lr: 2.87e-04
+2026-01-19 04:11:24,064 BoA.train INFO: Epoch[16] Iteration[50/59] Loss: 0.262, Acc: 1.000, Base Lr: 2.87e-04
+2026-01-19 04:11:25,842 BoA.train INFO: Epoch 16 done. Time per batch: 0.260[s] Speed: 246.5[samples/s]
+2026-01-19 04:11:31,759 BoA.train INFO: Validation Results - Epoch: 16
+2026-01-19 04:11:31,759 BoA.train INFO: mAP: 75.5%
+2026-01-19 04:11:31,759 BoA.train INFO: CMC curve, Rank-1  :79.9%
+2026-01-19 04:11:31,759 BoA.train INFO: CMC curve, Rank-5  :88.2%
+2026-01-19 04:11:31,759 BoA.train INFO: CMC curve, Rank-10 :90.8%
+2026-01-19 04:11:32,070 BoA.train INFO: Best mAP: 75.5%
+2026-01-19 04:11:32,070 BoA.train INFO: Best Rank-1: 79.9%
+2026-01-19 04:11:32,070 BoA.train INFO: Best Rank-5: 88.2%
+2026-01-19 04:11:32,071 BoA.train INFO: Best Rank-10: 90.8%
+2026-01-19 04:11:35,490 BoA.train INFO: Epoch[17] Iteration[10/59] Loss: 0.244, Acc: 1.000, Base Lr: 2.85e-04
+2026-01-19 04:11:37,993 BoA.train INFO: Epoch[17] Iteration[20/59] Loss: 0.251, Acc: 1.000, Base Lr: 2.85e-04
+2026-01-19 04:11:40,478 BoA.train INFO: Epoch[17] Iteration[30/59] Loss: 0.251, Acc: 1.000, Base Lr: 2.85e-04
+2026-01-19 04:11:42,955 BoA.train INFO: Epoch[17] Iteration[40/59] Loss: 0.254, Acc: 1.000, Base Lr: 2.85e-04
+2026-01-19 04:11:45,372 BoA.train INFO: Epoch[17] Iteration[50/59] Loss: 0.257, Acc: 1.000, Base Lr: 2.85e-04
+2026-01-19 04:11:47,161 BoA.train INFO: Epoch 17 done. Time per batch: 0.262[s] Speed: 244.6[samples/s]
+2026-01-19 04:11:53,046 BoA.train INFO: Validation Results - Epoch: 17
+2026-01-19 04:11:53,046 BoA.train INFO: mAP: 75.5%
+2026-01-19 04:11:53,047 BoA.train INFO: CMC curve, Rank-1  :80.7%
+2026-01-19 04:11:53,047 BoA.train INFO: CMC curve, Rank-5  :89.2%
+2026-01-19 04:11:53,047 BoA.train INFO: CMC curve, Rank-10 :91.7%
+2026-01-19 04:11:53,365 BoA.train INFO: Best mAP: 75.5%
+2026-01-19 04:11:53,366 BoA.train INFO: Best Rank-1: 80.7%
+2026-01-19 04:11:53,366 BoA.train INFO: Best Rank-5: 89.2%
+2026-01-19 04:11:53,366 BoA.train INFO: Best Rank-10: 91.7%
+2026-01-19 04:11:56,885 BoA.train INFO: Epoch[18] Iteration[10/59] Loss: 0.260, Acc: 1.000, Base Lr: 2.84e-04
+2026-01-19 04:11:59,424 BoA.train INFO: Epoch[18] Iteration[20/59] Loss: 0.252, Acc: 1.000, Base Lr: 2.84e-04
+2026-01-19 04:12:01,960 BoA.train INFO: Epoch[18] Iteration[30/59] Loss: 0.254, Acc: 1.000, Base Lr: 2.84e-04
+2026-01-19 04:12:04,532 BoA.train INFO: Epoch[18] Iteration[40/59] Loss: 0.254, Acc: 1.000, Base Lr: 2.84e-04
+2026-01-19 04:12:06,961 BoA.train INFO: Epoch[18] Iteration[50/59] Loss: 0.254, Acc: 1.000, Base Lr: 2.84e-04
+2026-01-19 04:12:08,743 BoA.train INFO: Epoch 18 done. Time per batch: 0.267[s] Speed: 240.1[samples/s]
+2026-01-19 04:12:14,620 BoA.train INFO: Validation Results - Epoch: 18
+2026-01-19 04:12:14,620 BoA.train INFO: mAP: 77.7%
+2026-01-19 04:12:14,620 BoA.train INFO: CMC curve, Rank-1  :80.9%
+2026-01-19 04:12:14,620 BoA.train INFO: CMC curve, Rank-5  :88.3%
+2026-01-19 04:12:14,620 BoA.train INFO: CMC curve, Rank-10 :91.5%
+2026-01-19 04:12:14,935 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:12:14,935 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:12:14,935 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:12:14,936 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:12:18,410 BoA.train INFO: Epoch[19] Iteration[10/59] Loss: 0.264, Acc: 1.000, Base Lr: 2.82e-04
+2026-01-19 04:12:20,849 BoA.train INFO: Epoch[19] Iteration[20/59] Loss: 0.263, Acc: 1.000, Base Lr: 2.82e-04
+2026-01-19 04:12:23,305 BoA.train INFO: Epoch[19] Iteration[30/59] Loss: 0.263, Acc: 1.000, Base Lr: 2.82e-04
+2026-01-19 04:12:25,749 BoA.train INFO: Epoch[19] Iteration[40/59] Loss: 0.259, Acc: 1.000, Base Lr: 2.82e-04
+2026-01-19 04:12:28,167 BoA.train INFO: Epoch[19] Iteration[50/59] Loss: 0.258, Acc: 1.000, Base Lr: 2.82e-04
+2026-01-19 04:12:29,946 BoA.train INFO: Epoch 19 done. Time per batch: 0.260[s] Speed: 245.9[samples/s]
+2026-01-19 04:12:35,888 BoA.train INFO: Validation Results - Epoch: 19
+2026-01-19 04:12:35,888 BoA.train INFO: mAP: 76.0%
+2026-01-19 04:12:35,888 BoA.train INFO: CMC curve, Rank-1  :78.3%
+2026-01-19 04:12:35,889 BoA.train INFO: CMC curve, Rank-5  :87.2%
+2026-01-19 04:12:35,889 BoA.train INFO: CMC curve, Rank-10 :91.5%
+2026-01-19 04:12:35,889 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:12:35,889 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:12:35,889 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:12:35,889 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:12:39,345 BoA.train INFO: Epoch[20] Iteration[10/59] Loss: 0.245, Acc: 1.000, Base Lr: 2.80e-04
+2026-01-19 04:12:41,853 BoA.train INFO: Epoch[20] Iteration[20/59] Loss: 0.247, Acc: 1.000, Base Lr: 2.80e-04
+2026-01-19 04:12:44,282 BoA.train INFO: Epoch[20] Iteration[30/59] Loss: 0.248, Acc: 1.000, Base Lr: 2.80e-04
+2026-01-19 04:12:46,718 BoA.train INFO: Epoch[20] Iteration[40/59] Loss: 0.249, Acc: 1.000, Base Lr: 2.80e-04
+2026-01-19 04:12:49,109 BoA.train INFO: Epoch[20] Iteration[50/59] Loss: 0.250, Acc: 0.999, Base Lr: 2.80e-04
+2026-01-19 04:12:50,871 BoA.train INFO: Epoch 20 done. Time per batch: 0.260[s] Speed: 246.4[samples/s]
+2026-01-19 04:12:56,765 BoA.train INFO: Validation Results - Epoch: 20
+2026-01-19 04:12:56,765 BoA.train INFO: mAP: 73.7%
+2026-01-19 04:12:56,765 BoA.train INFO: CMC curve, Rank-1  :78.5%
+2026-01-19 04:12:56,765 BoA.train INFO: CMC curve, Rank-5  :86.0%
+2026-01-19 04:12:56,765 BoA.train INFO: CMC curve, Rank-10 :89.4%
+2026-01-19 04:12:56,766 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:12:56,766 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:12:56,766 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:12:56,766 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:13:00,215 BoA.train INFO: Epoch[21] Iteration[10/59] Loss: 0.247, Acc: 1.000, Base Lr: 2.78e-04
+2026-01-19 04:13:02,677 BoA.train INFO: Epoch[21] Iteration[20/59] Loss: 0.246, Acc: 1.000, Base Lr: 2.78e-04
+2026-01-19 04:13:05,122 BoA.train INFO: Epoch[21] Iteration[30/59] Loss: 0.245, Acc: 1.000, Base Lr: 2.78e-04
+2026-01-19 04:13:07,566 BoA.train INFO: Epoch[21] Iteration[40/59] Loss: 0.245, Acc: 1.000, Base Lr: 2.78e-04
+2026-01-19 04:13:09,979 BoA.train INFO: Epoch[21] Iteration[50/59] Loss: 0.244, Acc: 1.000, Base Lr: 2.78e-04
+2026-01-19 04:13:11,730 BoA.train INFO: Epoch 21 done. Time per batch: 0.259[s] Speed: 246.7[samples/s]
+2026-01-19 04:13:17,596 BoA.train INFO: Validation Results - Epoch: 21
+2026-01-19 04:13:17,597 BoA.train INFO: mAP: 70.2%
+2026-01-19 04:13:17,597 BoA.train INFO: CMC curve, Rank-1  :73.6%
+2026-01-19 04:13:17,597 BoA.train INFO: CMC curve, Rank-5  :83.6%
+2026-01-19 04:13:17,597 BoA.train INFO: CMC curve, Rank-10 :88.5%
+2026-01-19 04:13:17,597 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:13:17,597 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:13:17,597 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:13:17,597 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:13:20,913 BoA.train INFO: Epoch[22] Iteration[10/59] Loss: 0.250, Acc: 1.000, Base Lr: 2.76e-04
+2026-01-19 04:13:23,378 BoA.train INFO: Epoch[22] Iteration[20/59] Loss: 0.248, Acc: 1.000, Base Lr: 2.76e-04
+2026-01-19 04:13:25,931 BoA.train INFO: Epoch[22] Iteration[30/59] Loss: 0.247, Acc: 0.999, Base Lr: 2.76e-04
+2026-01-19 04:13:28,389 BoA.train INFO: Epoch[22] Iteration[40/59] Loss: 0.249, Acc: 1.000, Base Lr: 2.76e-04
+2026-01-19 04:13:30,810 BoA.train INFO: Epoch[22] Iteration[50/59] Loss: 0.248, Acc: 0.999, Base Lr: 2.76e-04
+2026-01-19 04:13:32,586 BoA.train INFO: Epoch 22 done. Time per batch: 0.260[s] Speed: 246.4[samples/s]
+2026-01-19 04:13:38,431 BoA.train INFO: Validation Results - Epoch: 22
+2026-01-19 04:13:38,431 BoA.train INFO: mAP: 76.4%
+2026-01-19 04:13:38,431 BoA.train INFO: CMC curve, Rank-1  :79.3%
+2026-01-19 04:13:38,431 BoA.train INFO: CMC curve, Rank-5  :87.4%
+2026-01-19 04:13:38,431 BoA.train INFO: CMC curve, Rank-10 :92.1%
+2026-01-19 04:13:38,431 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:13:38,431 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:13:38,431 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:13:38,431 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:13:41,817 BoA.train INFO: Epoch[23] Iteration[10/59] Loss: 0.243, Acc: 1.000, Base Lr: 2.74e-04
+2026-01-19 04:13:44,258 BoA.train INFO: Epoch[23] Iteration[20/59] Loss: 0.245, Acc: 1.000, Base Lr: 2.74e-04
+2026-01-19 04:13:46,708 BoA.train INFO: Epoch[23] Iteration[30/59] Loss: 0.242, Acc: 1.000, Base Lr: 2.74e-04
+2026-01-19 04:13:49,136 BoA.train INFO: Epoch[23] Iteration[40/59] Loss: 0.242, Acc: 1.000, Base Lr: 2.74e-04
+2026-01-19 04:13:51,569 BoA.train INFO: Epoch[23] Iteration[50/59] Loss: 0.240, Acc: 1.000, Base Lr: 2.74e-04
+2026-01-19 04:13:53,339 BoA.train INFO: Epoch 23 done. Time per batch: 0.258[s] Speed: 247.7[samples/s]
+2026-01-19 04:13:59,286 BoA.train INFO: Validation Results - Epoch: 23
+2026-01-19 04:13:59,286 BoA.train INFO: mAP: 75.5%
+2026-01-19 04:13:59,286 BoA.train INFO: CMC curve, Rank-1  :78.8%
+2026-01-19 04:13:59,286 BoA.train INFO: CMC curve, Rank-5  :89.1%
+2026-01-19 04:13:59,286 BoA.train INFO: CMC curve, Rank-10 :91.9%
+2026-01-19 04:13:59,286 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:13:59,286 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:13:59,286 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:13:59,286 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:14:02,762 BoA.train INFO: Epoch[24] Iteration[10/59] Loss: 0.233, Acc: 1.000, Base Lr: 2.71e-04
+2026-01-19 04:14:05,289 BoA.train INFO: Epoch[24] Iteration[20/59] Loss: 0.239, Acc: 1.000, Base Lr: 2.71e-04
+2026-01-19 04:14:07,791 BoA.train INFO: Epoch[24] Iteration[30/59] Loss: 0.238, Acc: 1.000, Base Lr: 2.71e-04
+2026-01-19 04:14:10,290 BoA.train INFO: Epoch[24] Iteration[40/59] Loss: 0.237, Acc: 1.000, Base Lr: 2.71e-04
+2026-01-19 04:14:12,748 BoA.train INFO: Epoch[24] Iteration[50/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.71e-04
+2026-01-19 04:14:14,560 BoA.train INFO: Epoch 24 done. Time per batch: 0.265[s] Speed: 241.6[samples/s]
+2026-01-19 04:14:20,563 BoA.train INFO: Validation Results - Epoch: 24
+2026-01-19 04:14:20,563 BoA.train INFO: mAP: 76.5%
+2026-01-19 04:14:20,563 BoA.train INFO: CMC curve, Rank-1  :79.9%
+2026-01-19 04:14:20,563 BoA.train INFO: CMC curve, Rank-5  :90.0%
+2026-01-19 04:14:20,563 BoA.train INFO: CMC curve, Rank-10 :93.8%
+2026-01-19 04:14:20,563 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:14:20,563 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:14:20,563 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:14:20,563 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:14:23,912 BoA.train INFO: Epoch[25] Iteration[10/59] Loss: 0.231, Acc: 1.000, Base Lr: 2.69e-04
+2026-01-19 04:14:26,392 BoA.train INFO: Epoch[25] Iteration[20/59] Loss: 0.248, Acc: 1.000, Base Lr: 2.69e-04
+2026-01-19 04:14:28,920 BoA.train INFO: Epoch[25] Iteration[30/59] Loss: 0.258, Acc: 1.000, Base Lr: 2.69e-04
+2026-01-19 04:14:31,361 BoA.train INFO: Epoch[25] Iteration[40/59] Loss: 0.254, Acc: 1.000, Base Lr: 2.69e-04
+2026-01-19 04:14:33,777 BoA.train INFO: Epoch[25] Iteration[50/59] Loss: 0.254, Acc: 1.000, Base Lr: 2.69e-04
+2026-01-19 04:14:35,542 BoA.train INFO: Epoch 25 done. Time per batch: 0.260[s] Speed: 246.5[samples/s]
+2026-01-19 04:14:41,438 BoA.train INFO: Validation Results - Epoch: 25
+2026-01-19 04:14:41,438 BoA.train INFO: mAP: 72.3%
+2026-01-19 04:14:41,439 BoA.train INFO: CMC curve, Rank-1  :76.2%
+2026-01-19 04:14:41,439 BoA.train INFO: CMC curve, Rank-5  :87.1%
+2026-01-19 04:14:41,439 BoA.train INFO: CMC curve, Rank-10 :91.4%
+2026-01-19 04:14:41,439 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:14:41,439 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:14:41,439 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:14:41,439 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:14:44,843 BoA.train INFO: Epoch[26] Iteration[10/59] Loss: 0.240, Acc: 1.000, Base Lr: 2.67e-04
+2026-01-19 04:14:47,308 BoA.train INFO: Epoch[26] Iteration[20/59] Loss: 0.238, Acc: 1.000, Base Lr: 2.67e-04
+2026-01-19 04:14:49,814 BoA.train INFO: Epoch[26] Iteration[30/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.67e-04
+2026-01-19 04:14:52,273 BoA.train INFO: Epoch[26] Iteration[40/59] Loss: 0.239, Acc: 1.000, Base Lr: 2.67e-04
+2026-01-19 04:14:54,713 BoA.train INFO: Epoch[26] Iteration[50/59] Loss: 0.239, Acc: 1.000, Base Lr: 2.67e-04
+2026-01-19 04:14:56,462 BoA.train INFO: Epoch 26 done. Time per batch: 0.260[s] Speed: 245.7[samples/s]
+2026-01-19 04:15:02,322 BoA.train INFO: Validation Results - Epoch: 26
+2026-01-19 04:15:02,323 BoA.train INFO: mAP: 71.9%
+2026-01-19 04:15:02,323 BoA.train INFO: CMC curve, Rank-1  :77.0%
+2026-01-19 04:15:02,323 BoA.train INFO: CMC curve, Rank-5  :87.8%
+2026-01-19 04:15:02,323 BoA.train INFO: CMC curve, Rank-10 :92.5%
+2026-01-19 04:15:02,323 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:15:02,323 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:15:02,323 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:15:02,323 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:15:05,620 BoA.train INFO: Epoch[27] Iteration[10/59] Loss: 0.231, Acc: 1.000, Base Lr: 2.64e-04
+2026-01-19 04:15:08,106 BoA.train INFO: Epoch[27] Iteration[20/59] Loss: 0.232, Acc: 1.000, Base Lr: 2.64e-04
+2026-01-19 04:15:10,552 BoA.train INFO: Epoch[27] Iteration[30/59] Loss: 0.234, Acc: 1.000, Base Lr: 2.64e-04
+2026-01-19 04:15:12,983 BoA.train INFO: Epoch[27] Iteration[40/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.64e-04
+2026-01-19 04:15:15,393 BoA.train INFO: Epoch[27] Iteration[50/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.64e-04
+2026-01-19 04:15:17,157 BoA.train INFO: Epoch 27 done. Time per batch: 0.257[s] Speed: 248.9[samples/s]
+2026-01-19 04:15:22,977 BoA.train INFO: Validation Results - Epoch: 27
+2026-01-19 04:15:22,977 BoA.train INFO: mAP: 69.2%
+2026-01-19 04:15:22,978 BoA.train INFO: CMC curve, Rank-1  :71.3%
+2026-01-19 04:15:22,978 BoA.train INFO: CMC curve, Rank-5  :84.0%
+2026-01-19 04:15:22,978 BoA.train INFO: CMC curve, Rank-10 :89.7%
+2026-01-19 04:15:22,978 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:15:22,978 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:15:22,978 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:15:22,978 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:15:26,441 BoA.train INFO: Epoch[28] Iteration[10/59] Loss: 0.234, Acc: 1.000, Base Lr: 2.62e-04
+2026-01-19 04:15:28,907 BoA.train INFO: Epoch[28] Iteration[20/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.62e-04
+2026-01-19 04:15:31,360 BoA.train INFO: Epoch[28] Iteration[30/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.62e-04
+2026-01-19 04:15:33,820 BoA.train INFO: Epoch[28] Iteration[40/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.62e-04
+2026-01-19 04:15:36,236 BoA.train INFO: Epoch[28] Iteration[50/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.62e-04
+2026-01-19 04:15:38,017 BoA.train INFO: Epoch 28 done. Time per batch: 0.261[s] Speed: 245.5[samples/s]
+2026-01-19 04:15:43,970 BoA.train INFO: Validation Results - Epoch: 28
+2026-01-19 04:15:43,970 BoA.train INFO: mAP: 70.8%
+2026-01-19 04:15:43,970 BoA.train INFO: CMC curve, Rank-1  :73.3%
+2026-01-19 04:15:43,970 BoA.train INFO: CMC curve, Rank-5  :83.6%
+2026-01-19 04:15:43,970 BoA.train INFO: CMC curve, Rank-10 :89.6%
+2026-01-19 04:15:43,970 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:15:43,970 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:15:43,970 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:15:43,970 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:15:47,384 BoA.train INFO: Epoch[29] Iteration[10/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.59e-04
+2026-01-19 04:15:49,932 BoA.train INFO: Epoch[29] Iteration[20/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.59e-04
+2026-01-19 04:15:52,514 BoA.train INFO: Epoch[29] Iteration[30/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.59e-04
+2026-01-19 04:15:55,021 BoA.train INFO: Epoch[29] Iteration[40/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.59e-04
+2026-01-19 04:15:57,441 BoA.train INFO: Epoch[29] Iteration[50/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.59e-04
+2026-01-19 04:15:59,205 BoA.train INFO: Epoch 29 done. Time per batch: 0.264[s] Speed: 242.3[samples/s]
+2026-01-19 04:16:04,999 BoA.train INFO: Validation Results - Epoch: 29
+2026-01-19 04:16:04,999 BoA.train INFO: mAP: 71.4%
+2026-01-19 04:16:04,999 BoA.train INFO: CMC curve, Rank-1  :73.7%
+2026-01-19 04:16:04,999 BoA.train INFO: CMC curve, Rank-5  :83.9%
+2026-01-19 04:16:04,999 BoA.train INFO: CMC curve, Rank-10 :88.2%
+2026-01-19 04:16:04,999 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:16:04,999 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:16:04,999 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:16:04,999 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:16:08,507 BoA.train INFO: Epoch[30] Iteration[10/59] Loss: 0.229, Acc: 1.000, Base Lr: 2.56e-04
+2026-01-19 04:16:11,193 BoA.train INFO: Epoch[30] Iteration[20/59] Loss: 0.229, Acc: 1.000, Base Lr: 2.56e-04
+2026-01-19 04:16:13,856 BoA.train INFO: Epoch[30] Iteration[30/59] Loss: 0.229, Acc: 1.000, Base Lr: 2.56e-04
+2026-01-19 04:16:16,511 BoA.train INFO: Epoch[30] Iteration[40/59] Loss: 0.232, Acc: 1.000, Base Lr: 2.56e-04
+2026-01-19 04:16:18,951 BoA.train INFO: Epoch[30] Iteration[50/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.56e-04
+2026-01-19 04:16:20,937 BoA.train INFO: Epoch 30 done. Time per batch: 0.272[s] Speed: 235.5[samples/s]
+2026-01-19 04:16:26,745 BoA.train INFO: Validation Results - Epoch: 30
+2026-01-19 04:16:26,745 BoA.train INFO: mAP: 71.8%
+2026-01-19 04:16:26,745 BoA.train INFO: CMC curve, Rank-1  :77.4%
+2026-01-19 04:16:26,745 BoA.train INFO: CMC curve, Rank-5  :90.0%
+2026-01-19 04:16:26,745 BoA.train INFO: CMC curve, Rank-10 :93.4%
+2026-01-19 04:16:26,745 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:16:26,745 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:16:26,745 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:16:26,745 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:16:30,211 BoA.train INFO: Epoch[31] Iteration[10/59] Loss: 0.239, Acc: 1.000, Base Lr: 2.53e-04
+2026-01-19 04:16:32,718 BoA.train INFO: Epoch[31] Iteration[20/59] Loss: 0.238, Acc: 1.000, Base Lr: 2.53e-04
+2026-01-19 04:16:35,195 BoA.train INFO: Epoch[31] Iteration[30/59] Loss: 0.238, Acc: 1.000, Base Lr: 2.53e-04
+2026-01-19 04:16:37,696 BoA.train INFO: Epoch[31] Iteration[40/59] Loss: 0.237, Acc: 1.000, Base Lr: 2.53e-04
+2026-01-19 04:16:40,129 BoA.train INFO: Epoch[31] Iteration[50/59] Loss: 0.238, Acc: 1.000, Base Lr: 2.53e-04
+2026-01-19 04:16:41,921 BoA.train INFO: Epoch 31 done. Time per batch: 0.263[s] Speed: 243.3[samples/s]
+2026-01-19 04:16:47,784 BoA.train INFO: Validation Results - Epoch: 31
+2026-01-19 04:16:47,785 BoA.train INFO: mAP: 69.8%
+2026-01-19 04:16:47,785 BoA.train INFO: CMC curve, Rank-1  :74.4%
+2026-01-19 04:16:47,785 BoA.train INFO: CMC curve, Rank-5  :85.3%
+2026-01-19 04:16:47,785 BoA.train INFO: CMC curve, Rank-10 :90.6%
+2026-01-19 04:16:47,785 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:16:47,785 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:16:47,785 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:16:47,785 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:16:51,225 BoA.train INFO: Epoch[32] Iteration[10/59] Loss: 0.239, Acc: 1.000, Base Lr: 2.50e-04
+2026-01-19 04:16:53,735 BoA.train INFO: Epoch[32] Iteration[20/59] Loss: 0.240, Acc: 1.000, Base Lr: 2.50e-04
+2026-01-19 04:16:56,258 BoA.train INFO: Epoch[32] Iteration[30/59] Loss: 0.238, Acc: 1.000, Base Lr: 2.50e-04
+2026-01-19 04:16:58,766 BoA.train INFO: Epoch[32] Iteration[40/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.50e-04
+2026-01-19 04:17:01,223 BoA.train INFO: Epoch[32] Iteration[50/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.50e-04
+2026-01-19 04:17:03,019 BoA.train INFO: Epoch 32 done. Time per batch: 0.264[s] Speed: 242.3[samples/s]
+2026-01-19 04:17:08,730 BoA.train INFO: Validation Results - Epoch: 32
+2026-01-19 04:17:08,731 BoA.train INFO: mAP: 76.0%
+2026-01-19 04:17:08,731 BoA.train INFO: CMC curve, Rank-1  :78.1%
+2026-01-19 04:17:08,731 BoA.train INFO: CMC curve, Rank-5  :88.0%
+2026-01-19 04:17:08,731 BoA.train INFO: CMC curve, Rank-10 :92.6%
+2026-01-19 04:17:08,731 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:17:08,731 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:17:08,731 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:17:08,731 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:17:12,098 BoA.train INFO: Epoch[33] Iteration[10/59] Loss: 0.238, Acc: 1.000, Base Lr: 2.47e-04
+2026-01-19 04:17:14,574 BoA.train INFO: Epoch[33] Iteration[20/59] Loss: 0.233, Acc: 1.000, Base Lr: 2.47e-04
+2026-01-19 04:17:17,030 BoA.train INFO: Epoch[33] Iteration[30/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.47e-04
+2026-01-19 04:17:19,476 BoA.train INFO: Epoch[33] Iteration[40/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.47e-04
+2026-01-19 04:17:21,931 BoA.train INFO: Epoch[33] Iteration[50/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.47e-04
+2026-01-19 04:17:23,734 BoA.train INFO: Epoch 33 done. Time per batch: 0.260[s] Speed: 246.1[samples/s]
+2026-01-19 04:17:29,614 BoA.train INFO: Validation Results - Epoch: 33
+2026-01-19 04:17:29,614 BoA.train INFO: mAP: 74.8%
+2026-01-19 04:17:29,614 BoA.train INFO: CMC curve, Rank-1  :79.3%
+2026-01-19 04:17:29,614 BoA.train INFO: CMC curve, Rank-5  :88.4%
+2026-01-19 04:17:29,614 BoA.train INFO: CMC curve, Rank-10 :92.3%
+2026-01-19 04:17:29,614 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:17:29,614 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:17:29,614 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:17:29,614 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:17:33,006 BoA.train INFO: Epoch[34] Iteration[10/59] Loss: 0.230, Acc: 1.000, Base Lr: 2.44e-04
+2026-01-19 04:17:35,468 BoA.train INFO: Epoch[34] Iteration[20/59] Loss: 0.231, Acc: 1.000, Base Lr: 2.44e-04
+2026-01-19 04:17:37,916 BoA.train INFO: Epoch[34] Iteration[30/59] Loss: 0.234, Acc: 1.000, Base Lr: 2.44e-04
+2026-01-19 04:17:40,339 BoA.train INFO: Epoch[34] Iteration[40/59] Loss: 0.234, Acc: 1.000, Base Lr: 2.44e-04
+2026-01-19 04:17:42,753 BoA.train INFO: Epoch[34] Iteration[50/59] Loss: 0.234, Acc: 1.000, Base Lr: 2.44e-04
+2026-01-19 04:17:44,523 BoA.train INFO: Epoch 34 done. Time per batch: 0.258[s] Speed: 247.6[samples/s]
+2026-01-19 04:17:50,454 BoA.train INFO: Validation Results - Epoch: 34
+2026-01-19 04:17:50,454 BoA.train INFO: mAP: 76.2%
+2026-01-19 04:17:50,454 BoA.train INFO: CMC curve, Rank-1  :80.6%
+2026-01-19 04:17:50,454 BoA.train INFO: CMC curve, Rank-5  :89.7%
+2026-01-19 04:17:50,454 BoA.train INFO: CMC curve, Rank-10 :93.3%
+2026-01-19 04:17:50,454 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:17:50,454 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:17:50,454 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:17:50,454 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:17:53,886 BoA.train INFO: Epoch[35] Iteration[10/59] Loss: 0.233, Acc: 1.000, Base Lr: 2.41e-04
+2026-01-19 04:17:56,348 BoA.train INFO: Epoch[35] Iteration[20/59] Loss: 0.241, Acc: 1.000, Base Lr: 2.41e-04
+2026-01-19 04:17:58,825 BoA.train INFO: Epoch[35] Iteration[30/59] Loss: 0.241, Acc: 1.000, Base Lr: 2.41e-04
+2026-01-19 04:18:01,293 BoA.train INFO: Epoch[35] Iteration[40/59] Loss: 0.239, Acc: 1.000, Base Lr: 2.41e-04
+2026-01-19 04:18:03,699 BoA.train INFO: Epoch[35] Iteration[50/59] Loss: 0.240, Acc: 0.999, Base Lr: 2.41e-04
+2026-01-19 04:18:05,489 BoA.train INFO: Epoch 35 done. Time per batch: 0.261[s] Speed: 245.6[samples/s]
+2026-01-19 04:18:11,563 BoA.train INFO: Validation Results - Epoch: 35
+2026-01-19 04:18:11,563 BoA.train INFO: mAP: 76.0%
+2026-01-19 04:18:11,563 BoA.train INFO: CMC curve, Rank-1  :78.3%
+2026-01-19 04:18:11,563 BoA.train INFO: CMC curve, Rank-5  :88.8%
+2026-01-19 04:18:11,563 BoA.train INFO: CMC curve, Rank-10 :93.3%
+2026-01-19 04:18:11,563 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:18:11,563 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:18:11,563 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:18:11,563 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:18:15,082 BoA.train INFO: Epoch[36] Iteration[10/59] Loss: 0.229, Acc: 1.000, Base Lr: 2.38e-04
+2026-01-19 04:18:17,595 BoA.train INFO: Epoch[36] Iteration[20/59] Loss: 0.233, Acc: 1.000, Base Lr: 2.38e-04
+2026-01-19 04:18:20,108 BoA.train INFO: Epoch[36] Iteration[30/59] Loss: 0.233, Acc: 1.000, Base Lr: 2.38e-04
+2026-01-19 04:18:22,556 BoA.train INFO: Epoch[36] Iteration[40/59] Loss: 0.236, Acc: 1.000, Base Lr: 2.38e-04
+2026-01-19 04:18:24,980 BoA.train INFO: Epoch[36] Iteration[50/59] Loss: 0.238, Acc: 1.000, Base Lr: 2.38e-04
+2026-01-19 04:18:26,761 BoA.train INFO: Epoch 36 done. Time per batch: 0.264[s] Speed: 242.9[samples/s]
+2026-01-19 04:18:32,555 BoA.train INFO: Validation Results - Epoch: 36
+2026-01-19 04:18:32,555 BoA.train INFO: mAP: 73.9%
+2026-01-19 04:18:32,555 BoA.train INFO: CMC curve, Rank-1  :75.7%
+2026-01-19 04:18:32,555 BoA.train INFO: CMC curve, Rank-5  :86.6%
+2026-01-19 04:18:32,555 BoA.train INFO: CMC curve, Rank-10 :91.7%
+2026-01-19 04:18:32,556 BoA.train INFO: Best mAP: 77.7%
+2026-01-19 04:18:32,556 BoA.train INFO: Best Rank-1: 80.9%
+2026-01-19 04:18:32,556 BoA.train INFO: Best Rank-5: 88.3%
+2026-01-19 04:18:32,556 BoA.train INFO: Best Rank-10: 91.5%
+2026-01-19 04:18:35,933 BoA.train INFO: Epoch[37] Iteration[10/59] Loss: 0.246, Acc: 0.994, Base Lr: 2.35e-04
+2026-01-19 04:18:38,372 BoA.train INFO: Epoch[37] Iteration[20/59] Loss: 0.242, Acc: 0.995, Base Lr: 2.35e-04
+2026-01-19 04:18:40,817 BoA.train INFO: Epoch[37] Iteration[30/59] Loss: 0.239, Acc: 0.997, Base Lr: 2.35e-04
+2026-01-19 04:18:43,265 BoA.train INFO: Epoch[37] Iteration[40/59] Loss: 0.238, Acc: 0.998, Base Lr: 2.35e-04
+2026-01-19 04:18:45,696 BoA.train INFO: Epoch[37] Iteration[50/59] Loss: 0.237, Acc: 0.998, Base Lr: 2.35e-04
+2026-01-19 04:18:47,484 BoA.train INFO: Epoch 37 done. Time per batch: 0.259[s] Speed: 247.3[samples/s]
+2026-01-19 04:18:53,458 BoA.train INFO: Validation Results - Epoch: 37
+2026-01-19 04:18:53,458 BoA.train INFO: mAP: 78.5%
+2026-01-19 04:18:53,458 BoA.train INFO: CMC curve, Rank-1  :81.3%
+2026-01-19 04:18:53,458 BoA.train INFO: CMC curve, Rank-5  :89.7%
+2026-01-19 04:18:53,458 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:18:53,778 BoA.train INFO: Best mAP: 78.5%
+2026-01-19 04:18:53,778 BoA.train INFO: Best Rank-1: 81.3%
+2026-01-19 04:18:53,778 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:18:53,778 BoA.train INFO: Best Rank-10: 93.5%
+2026-01-19 04:18:57,214 BoA.train INFO: Epoch[38] Iteration[10/59] Loss: 0.227, Acc: 1.000, Base Lr: 2.32e-04
+2026-01-19 04:18:59,775 BoA.train INFO: Epoch[38] Iteration[20/59] Loss: 0.231, Acc: 1.000, Base Lr: 2.32e-04
+2026-01-19 04:19:02,370 BoA.train INFO: Epoch[38] Iteration[30/59] Loss: 0.233, Acc: 1.000, Base Lr: 2.32e-04
+2026-01-19 04:19:04,935 BoA.train INFO: Epoch[38] Iteration[40/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.32e-04
+2026-01-19 04:19:07,404 BoA.train INFO: Epoch[38] Iteration[50/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.32e-04
+2026-01-19 04:19:09,185 BoA.train INFO: Epoch 38 done. Time per batch: 0.267[s] Speed: 239.5[samples/s]
+2026-01-19 04:19:15,104 BoA.train INFO: Validation Results - Epoch: 38
+2026-01-19 04:19:15,105 BoA.train INFO: mAP: 70.8%
+2026-01-19 04:19:15,105 BoA.train INFO: CMC curve, Rank-1  :73.0%
+2026-01-19 04:19:15,105 BoA.train INFO: CMC curve, Rank-5  :84.6%
+2026-01-19 04:19:15,105 BoA.train INFO: CMC curve, Rank-10 :90.0%
+2026-01-19 04:19:15,105 BoA.train INFO: Best mAP: 78.5%
+2026-01-19 04:19:15,105 BoA.train INFO: Best Rank-1: 81.3%
+2026-01-19 04:19:15,105 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:19:15,105 BoA.train INFO: Best Rank-10: 93.5%
+2026-01-19 04:19:18,482 BoA.train INFO: Epoch[39] Iteration[10/59] Loss: 0.232, Acc: 1.000, Base Lr: 2.28e-04
+2026-01-19 04:19:21,057 BoA.train INFO: Epoch[39] Iteration[20/59] Loss: 0.232, Acc: 1.000, Base Lr: 2.28e-04
+2026-01-19 04:19:23,544 BoA.train INFO: Epoch[39] Iteration[30/59] Loss: 0.233, Acc: 1.000, Base Lr: 2.28e-04
+2026-01-19 04:19:26,046 BoA.train INFO: Epoch[39] Iteration[40/59] Loss: 0.232, Acc: 1.000, Base Lr: 2.28e-04
+2026-01-19 04:19:28,473 BoA.train INFO: Epoch[39] Iteration[50/59] Loss: 0.231, Acc: 1.000, Base Lr: 2.28e-04
+2026-01-19 04:19:30,245 BoA.train INFO: Epoch 39 done. Time per batch: 0.262[s] Speed: 243.9[samples/s]
+2026-01-19 04:19:36,217 BoA.train INFO: Validation Results - Epoch: 39
+2026-01-19 04:19:36,217 BoA.train INFO: mAP: 72.1%
+2026-01-19 04:19:36,217 BoA.train INFO: CMC curve, Rank-1  :74.8%
+2026-01-19 04:19:36,217 BoA.train INFO: CMC curve, Rank-5  :85.4%
+2026-01-19 04:19:36,217 BoA.train INFO: CMC curve, Rank-10 :89.8%
+2026-01-19 04:19:36,217 BoA.train INFO: Best mAP: 78.5%
+2026-01-19 04:19:36,217 BoA.train INFO: Best Rank-1: 81.3%
+2026-01-19 04:19:36,217 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:19:36,217 BoA.train INFO: Best Rank-10: 93.5%
+2026-01-19 04:19:39,781 BoA.train INFO: Epoch[40] Iteration[10/59] Loss: 0.226, Acc: 1.000, Base Lr: 2.25e-04
+2026-01-19 04:19:42,412 BoA.train INFO: Epoch[40] Iteration[20/59] Loss: 0.227, Acc: 1.000, Base Lr: 2.25e-04
+2026-01-19 04:19:45,058 BoA.train INFO: Epoch[40] Iteration[30/59] Loss: 0.227, Acc: 1.000, Base Lr: 2.25e-04
+2026-01-19 04:19:47,694 BoA.train INFO: Epoch[40] Iteration[40/59] Loss: 0.227, Acc: 1.000, Base Lr: 2.25e-04
+2026-01-19 04:19:50,144 BoA.train INFO: Epoch[40] Iteration[50/59] Loss: 0.227, Acc: 1.000, Base Lr: 2.25e-04
+2026-01-19 04:19:51,930 BoA.train INFO: Epoch 40 done. Time per batch: 0.272[s] Speed: 234.9[samples/s]
+2026-01-19 04:19:57,927 BoA.train INFO: Validation Results - Epoch: 40
+2026-01-19 04:19:57,927 BoA.train INFO: mAP: 73.6%
+2026-01-19 04:19:57,927 BoA.train INFO: CMC curve, Rank-1  :77.5%
+2026-01-19 04:19:57,927 BoA.train INFO: CMC curve, Rank-5  :87.2%
+2026-01-19 04:19:57,927 BoA.train INFO: CMC curve, Rank-10 :91.3%
+2026-01-19 04:19:57,927 BoA.train INFO: Best mAP: 78.5%
+2026-01-19 04:19:57,927 BoA.train INFO: Best Rank-1: 81.3%
+2026-01-19 04:19:57,927 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:19:57,927 BoA.train INFO: Best Rank-10: 93.5%
+2026-01-19 04:20:01,515 BoA.train INFO: Epoch[41] Iteration[10/59] Loss: 0.227, Acc: 1.000, Base Lr: 2.22e-04
+2026-01-19 04:20:04,014 BoA.train INFO: Epoch[41] Iteration[20/59] Loss: 0.226, Acc: 0.999, Base Lr: 2.22e-04
+2026-01-19 04:20:06,488 BoA.train INFO: Epoch[41] Iteration[30/59] Loss: 0.229, Acc: 0.999, Base Lr: 2.22e-04
+2026-01-19 04:20:09,011 BoA.train INFO: Epoch[41] Iteration[40/59] Loss: 0.232, Acc: 1.000, Base Lr: 2.22e-04
+2026-01-19 04:20:11,447 BoA.train INFO: Epoch[41] Iteration[50/59] Loss: 0.233, Acc: 1.000, Base Lr: 2.22e-04
+2026-01-19 04:20:13,235 BoA.train INFO: Epoch 41 done. Time per batch: 0.265[s] Speed: 241.2[samples/s]
+2026-01-19 04:20:19,192 BoA.train INFO: Validation Results - Epoch: 41
+2026-01-19 04:20:19,192 BoA.train INFO: mAP: 76.3%
+2026-01-19 04:20:19,193 BoA.train INFO: CMC curve, Rank-1  :80.3%
+2026-01-19 04:20:19,193 BoA.train INFO: CMC curve, Rank-5  :89.6%
+2026-01-19 04:20:19,193 BoA.train INFO: CMC curve, Rank-10 :94.3%
+2026-01-19 04:20:19,193 BoA.train INFO: Best mAP: 78.5%
+2026-01-19 04:20:19,193 BoA.train INFO: Best Rank-1: 81.3%
+2026-01-19 04:20:19,193 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:20:19,193 BoA.train INFO: Best Rank-10: 93.5%
+2026-01-19 04:20:22,687 BoA.train INFO: Epoch[42] Iteration[10/59] Loss: 0.235, Acc: 1.000, Base Lr: 2.18e-04
+2026-01-19 04:20:25,215 BoA.train INFO: Epoch[42] Iteration[20/59] Loss: 0.234, Acc: 1.000, Base Lr: 2.18e-04
+2026-01-19 04:20:27,689 BoA.train INFO: Epoch[42] Iteration[30/59] Loss: 0.234, Acc: 1.000, Base Lr: 2.18e-04
+2026-01-19 04:20:30,146 BoA.train INFO: Epoch[42] Iteration[40/59] Loss: 0.233, Acc: 1.000, Base Lr: 2.18e-04
+2026-01-19 04:20:32,589 BoA.train INFO: Epoch[42] Iteration[50/59] Loss: 0.234, Acc: 1.000, Base Lr: 2.18e-04
+2026-01-19 04:20:34,368 BoA.train INFO: Epoch 42 done. Time per batch: 0.263[s] Speed: 243.2[samples/s]
+2026-01-19 04:20:40,210 BoA.train INFO: Validation Results - Epoch: 42
+2026-01-19 04:20:40,211 BoA.train INFO: mAP: 78.7%
+2026-01-19 04:20:40,211 BoA.train INFO: CMC curve, Rank-1  :81.5%
+2026-01-19 04:20:40,211 BoA.train INFO: CMC curve, Rank-5  :89.7%
+2026-01-19 04:20:40,211 BoA.train INFO: CMC curve, Rank-10 :93.3%
+2026-01-19 04:20:40,522 BoA.train INFO: Best mAP: 78.7%
+2026-01-19 04:20:40,522 BoA.train INFO: Best Rank-1: 81.5%
+2026-01-19 04:20:40,522 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:20:40,523 BoA.train INFO: Best Rank-10: 93.3%
+2026-01-19 04:20:43,921 BoA.train INFO: Epoch[43] Iteration[10/59] Loss: 0.230, Acc: 1.000, Base Lr: 2.15e-04
+2026-01-19 04:20:46,407 BoA.train INFO: Epoch[43] Iteration[20/59] Loss: 0.232, Acc: 1.000, Base Lr: 2.15e-04
+2026-01-19 04:20:48,862 BoA.train INFO: Epoch[43] Iteration[30/59] Loss: 0.231, Acc: 1.000, Base Lr: 2.15e-04
+2026-01-19 04:20:51,340 BoA.train INFO: Epoch[43] Iteration[40/59] Loss: 0.231, Acc: 1.000, Base Lr: 2.15e-04
+2026-01-19 04:20:53,752 BoA.train INFO: Epoch[43] Iteration[50/59] Loss: 0.230, Acc: 1.000, Base Lr: 2.15e-04
+2026-01-19 04:20:55,519 BoA.train INFO: Epoch 43 done. Time per batch: 0.260[s] Speed: 246.2[samples/s]
+2026-01-19 04:21:01,406 BoA.train INFO: Validation Results - Epoch: 43
+2026-01-19 04:21:01,406 BoA.train INFO: mAP: 77.5%
+2026-01-19 04:21:01,406 BoA.train INFO: CMC curve, Rank-1  :80.7%
+2026-01-19 04:21:01,406 BoA.train INFO: CMC curve, Rank-5  :87.9%
+2026-01-19 04:21:01,406 BoA.train INFO: CMC curve, Rank-10 :92.2%
+2026-01-19 04:21:01,406 BoA.train INFO: Best mAP: 78.7%
+2026-01-19 04:21:01,406 BoA.train INFO: Best Rank-1: 81.5%
+2026-01-19 04:21:01,406 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:21:01,406 BoA.train INFO: Best Rank-10: 93.3%
+2026-01-19 04:21:05,159 BoA.train INFO: Epoch[44] Iteration[10/59] Loss: 0.226, Acc: 1.000, Base Lr: 2.11e-04
+2026-01-19 04:21:07,615 BoA.train INFO: Epoch[44] Iteration[20/59] Loss: 0.226, Acc: 1.000, Base Lr: 2.11e-04
+2026-01-19 04:21:10,072 BoA.train INFO: Epoch[44] Iteration[30/59] Loss: 0.228, Acc: 1.000, Base Lr: 2.11e-04
+2026-01-19 04:21:12,504 BoA.train INFO: Epoch[44] Iteration[40/59] Loss: 0.228, Acc: 1.000, Base Lr: 2.11e-04
+2026-01-19 04:21:14,925 BoA.train INFO: Epoch[44] Iteration[50/59] Loss: 0.228, Acc: 1.000, Base Lr: 2.11e-04
+2026-01-19 04:21:16,716 BoA.train INFO: Epoch 44 done. Time per batch: 0.265[s] Speed: 241.3[samples/s]
+2026-01-19 04:21:22,626 BoA.train INFO: Validation Results - Epoch: 44
+2026-01-19 04:21:22,627 BoA.train INFO: mAP: 70.7%
+2026-01-19 04:21:22,627 BoA.train INFO: CMC curve, Rank-1  :72.4%
+2026-01-19 04:21:22,627 BoA.train INFO: CMC curve, Rank-5  :84.8%
+2026-01-19 04:21:22,627 BoA.train INFO: CMC curve, Rank-10 :90.2%
+2026-01-19 04:21:22,627 BoA.train INFO: Best mAP: 78.7%
+2026-01-19 04:21:22,627 BoA.train INFO: Best Rank-1: 81.5%
+2026-01-19 04:21:22,627 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:21:22,627 BoA.train INFO: Best Rank-10: 93.3%
+2026-01-19 04:21:26,086 BoA.train INFO: Epoch[45] Iteration[10/59] Loss: 0.227, Acc: 1.000, Base Lr: 2.07e-04
+2026-01-19 04:21:28,526 BoA.train INFO: Epoch[45] Iteration[20/59] Loss: 0.226, Acc: 1.000, Base Lr: 2.07e-04
+2026-01-19 04:21:30,963 BoA.train INFO: Epoch[45] Iteration[30/59] Loss: 0.225, Acc: 1.000, Base Lr: 2.07e-04
+2026-01-19 04:21:33,405 BoA.train INFO: Epoch[45] Iteration[40/59] Loss: 0.225, Acc: 1.000, Base Lr: 2.07e-04
+2026-01-19 04:21:35,815 BoA.train INFO: Epoch[45] Iteration[50/59] Loss: 0.224, Acc: 1.000, Base Lr: 2.07e-04
+2026-01-19 04:21:37,582 BoA.train INFO: Epoch 45 done. Time per batch: 0.259[s] Speed: 246.9[samples/s]
+2026-01-19 04:21:43,571 BoA.train INFO: Validation Results - Epoch: 45
+2026-01-19 04:21:43,572 BoA.train INFO: mAP: 73.6%
+2026-01-19 04:21:43,572 BoA.train INFO: CMC curve, Rank-1  :74.4%
+2026-01-19 04:21:43,572 BoA.train INFO: CMC curve, Rank-5  :84.6%
+2026-01-19 04:21:43,572 BoA.train INFO: CMC curve, Rank-10 :90.8%
+2026-01-19 04:21:43,572 BoA.train INFO: Best mAP: 78.7%
+2026-01-19 04:21:43,572 BoA.train INFO: Best Rank-1: 81.5%
+2026-01-19 04:21:43,572 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:21:43,572 BoA.train INFO: Best Rank-10: 93.3%
+2026-01-19 04:21:46,949 BoA.train INFO: Epoch[46] Iteration[10/59] Loss: 0.222, Acc: 1.000, Base Lr: 2.04e-04
+2026-01-19 04:21:49,373 BoA.train INFO: Epoch[46] Iteration[20/59] Loss: 0.222, Acc: 1.000, Base Lr: 2.04e-04
+2026-01-19 04:21:51,801 BoA.train INFO: Epoch[46] Iteration[30/59] Loss: 0.222, Acc: 1.000, Base Lr: 2.04e-04
+2026-01-19 04:21:54,233 BoA.train INFO: Epoch[46] Iteration[40/59] Loss: 0.222, Acc: 1.000, Base Lr: 2.04e-04
+2026-01-19 04:21:56,625 BoA.train INFO: Epoch[46] Iteration[50/59] Loss: 0.222, Acc: 1.000, Base Lr: 2.04e-04
+2026-01-19 04:21:58,413 BoA.train INFO: Epoch 46 done. Time per batch: 0.256[s] Speed: 249.8[samples/s]
+2026-01-19 04:22:04,381 BoA.train INFO: Validation Results - Epoch: 46
+2026-01-19 04:22:04,381 BoA.train INFO: mAP: 77.3%
+2026-01-19 04:22:04,381 BoA.train INFO: CMC curve, Rank-1  :77.6%
+2026-01-19 04:22:04,381 BoA.train INFO: CMC curve, Rank-5  :86.4%
+2026-01-19 04:22:04,381 BoA.train INFO: CMC curve, Rank-10 :91.4%
+2026-01-19 04:22:04,381 BoA.train INFO: Best mAP: 78.7%
+2026-01-19 04:22:04,382 BoA.train INFO: Best Rank-1: 81.5%
+2026-01-19 04:22:04,382 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:22:04,382 BoA.train INFO: Best Rank-10: 93.3%
+2026-01-19 04:22:07,817 BoA.train INFO: Epoch[47] Iteration[10/59] Loss: 0.226, Acc: 1.000, Base Lr: 2.00e-04
+2026-01-19 04:22:10,291 BoA.train INFO: Epoch[47] Iteration[20/59] Loss: 0.224, Acc: 1.000, Base Lr: 2.00e-04
+2026-01-19 04:22:12,737 BoA.train INFO: Epoch[47] Iteration[30/59] Loss: 0.223, Acc: 1.000, Base Lr: 2.00e-04
+2026-01-19 04:22:15,167 BoA.train INFO: Epoch[47] Iteration[40/59] Loss: 0.223, Acc: 1.000, Base Lr: 2.00e-04
+2026-01-19 04:22:17,588 BoA.train INFO: Epoch[47] Iteration[50/59] Loss: 0.224, Acc: 1.000, Base Lr: 2.00e-04
+2026-01-19 04:22:19,610 BoA.train INFO: Epoch 47 done. Time per batch: 0.259[s] Speed: 246.7[samples/s]
+2026-01-19 04:22:25,550 BoA.train INFO: Validation Results - Epoch: 47
+2026-01-19 04:22:25,550 BoA.train INFO: mAP: 74.8%
+2026-01-19 04:22:25,550 BoA.train INFO: CMC curve, Rank-1  :76.7%
+2026-01-19 04:22:25,550 BoA.train INFO: CMC curve, Rank-5  :86.6%
+2026-01-19 04:22:25,550 BoA.train INFO: CMC curve, Rank-10 :91.0%
+2026-01-19 04:22:25,550 BoA.train INFO: Best mAP: 78.7%
+2026-01-19 04:22:25,550 BoA.train INFO: Best Rank-1: 81.5%
+2026-01-19 04:22:25,550 BoA.train INFO: Best Rank-5: 89.7%
+2026-01-19 04:22:25,550 BoA.train INFO: Best Rank-10: 93.3%
+2026-01-19 04:22:28,944 BoA.train INFO: Epoch[48] Iteration[10/59] Loss: 0.241, Acc: 1.000, Base Lr: 1.96e-04
+2026-01-19 04:22:31,402 BoA.train INFO: Epoch[48] Iteration[20/59] Loss: 0.236, Acc: 1.000, Base Lr: 1.96e-04
+2026-01-19 04:22:33,843 BoA.train INFO: Epoch[48] Iteration[30/59] Loss: 0.236, Acc: 1.000, Base Lr: 1.96e-04
+2026-01-19 04:22:36,281 BoA.train INFO: Epoch[48] Iteration[40/59] Loss: 0.236, Acc: 1.000, Base Lr: 1.96e-04
+2026-01-19 04:22:38,677 BoA.train INFO: Epoch[48] Iteration[50/59] Loss: 0.234, Acc: 1.000, Base Lr: 1.96e-04
+2026-01-19 04:22:40,435 BoA.train INFO: Epoch 48 done. Time per batch: 0.258[s] Speed: 248.0[samples/s]
+2026-01-19 04:22:46,385 BoA.train INFO: Validation Results - Epoch: 48
+2026-01-19 04:22:46,386 BoA.train INFO: mAP: 80.0%
+2026-01-19 04:22:46,386 BoA.train INFO: CMC curve, Rank-1  :81.2%
+2026-01-19 04:22:46,386 BoA.train INFO: CMC curve, Rank-5  :89.8%
+2026-01-19 04:22:46,386 BoA.train INFO: CMC curve, Rank-10 :93.4%
+2026-01-19 04:22:46,699 BoA.train INFO: Best mAP: 80.0%
+2026-01-19 04:22:46,699 BoA.train INFO: Best Rank-1: 81.2%
+2026-01-19 04:22:46,699 BoA.train INFO: Best Rank-5: 89.8%
+2026-01-19 04:22:46,699 BoA.train INFO: Best Rank-10: 93.4%
+2026-01-19 04:22:50,072 BoA.train INFO: Epoch[49] Iteration[10/59] Loss: 0.226, Acc: 1.000, Base Lr: 1.93e-04
+2026-01-19 04:22:52,522 BoA.train INFO: Epoch[49] Iteration[20/59] Loss: 0.226, Acc: 1.000, Base Lr: 1.93e-04
+2026-01-19 04:22:54,953 BoA.train INFO: Epoch[49] Iteration[30/59] Loss: 0.225, Acc: 1.000, Base Lr: 1.93e-04
+2026-01-19 04:22:57,381 BoA.train INFO: Epoch[49] Iteration[40/59] Loss: 0.225, Acc: 1.000, Base Lr: 1.93e-04
+2026-01-19 04:22:59,792 BoA.train INFO: Epoch[49] Iteration[50/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.93e-04
+2026-01-19 04:23:01,592 BoA.train INFO: Epoch 49 done. Time per batch: 0.258[s] Speed: 248.5[samples/s]
+2026-01-19 04:23:07,460 BoA.train INFO: Validation Results - Epoch: 49
+2026-01-19 04:23:07,460 BoA.train INFO: mAP: 79.6%
+2026-01-19 04:23:07,460 BoA.train INFO: CMC curve, Rank-1  :80.7%
+2026-01-19 04:23:07,460 BoA.train INFO: CMC curve, Rank-5  :90.2%
+2026-01-19 04:23:07,460 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:23:07,460 BoA.train INFO: Best mAP: 80.0%
+2026-01-19 04:23:07,460 BoA.train INFO: Best Rank-1: 81.2%
+2026-01-19 04:23:07,460 BoA.train INFO: Best Rank-5: 89.8%
+2026-01-19 04:23:07,460 BoA.train INFO: Best Rank-10: 93.4%
+2026-01-19 04:23:10,786 BoA.train INFO: Epoch[50] Iteration[10/59] Loss: 0.232, Acc: 1.000, Base Lr: 1.89e-04
+2026-01-19 04:23:13,252 BoA.train INFO: Epoch[50] Iteration[20/59] Loss: 0.227, Acc: 1.000, Base Lr: 1.89e-04
+2026-01-19 04:23:15,705 BoA.train INFO: Epoch[50] Iteration[30/59] Loss: 0.225, Acc: 1.000, Base Lr: 1.89e-04
+2026-01-19 04:23:18,150 BoA.train INFO: Epoch[50] Iteration[40/59] Loss: 0.225, Acc: 1.000, Base Lr: 1.89e-04
+2026-01-19 04:23:20,572 BoA.train INFO: Epoch[50] Iteration[50/59] Loss: 0.225, Acc: 1.000, Base Lr: 1.89e-04
+2026-01-19 04:23:22,328 BoA.train INFO: Epoch 50 done. Time per batch: 0.258[s] Speed: 248.3[samples/s]
+2026-01-19 04:23:28,195 BoA.train INFO: Validation Results - Epoch: 50
+2026-01-19 04:23:28,196 BoA.train INFO: mAP: 78.3%
+2026-01-19 04:23:28,196 BoA.train INFO: CMC curve, Rank-1  :82.2%
+2026-01-19 04:23:28,196 BoA.train INFO: CMC curve, Rank-5  :89.4%
+2026-01-19 04:23:28,196 BoA.train INFO: CMC curve, Rank-10 :92.0%
+2026-01-19 04:23:28,196 BoA.train INFO: Best mAP: 80.0%
+2026-01-19 04:23:28,196 BoA.train INFO: Best Rank-1: 81.2%
+2026-01-19 04:23:28,196 BoA.train INFO: Best Rank-5: 89.8%
+2026-01-19 04:23:28,196 BoA.train INFO: Best Rank-10: 93.4%
+2026-01-19 04:23:31,615 BoA.train INFO: Epoch[51] Iteration[10/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.85e-04
+2026-01-19 04:23:34,040 BoA.train INFO: Epoch[51] Iteration[20/59] Loss: 0.225, Acc: 1.000, Base Lr: 1.85e-04
+2026-01-19 04:23:36,481 BoA.train INFO: Epoch[51] Iteration[30/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.85e-04
+2026-01-19 04:23:38,902 BoA.train INFO: Epoch[51] Iteration[40/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.85e-04
+2026-01-19 04:23:41,333 BoA.train INFO: Epoch[51] Iteration[50/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.85e-04
+2026-01-19 04:23:43,080 BoA.train INFO: Epoch 51 done. Time per batch: 0.256[s] Speed: 249.7[samples/s]
+2026-01-19 04:23:48,914 BoA.train INFO: Validation Results - Epoch: 51
+2026-01-19 04:23:48,914 BoA.train INFO: mAP: 78.8%
+2026-01-19 04:23:48,915 BoA.train INFO: CMC curve, Rank-1  :82.2%
+2026-01-19 04:23:48,915 BoA.train INFO: CMC curve, Rank-5  :89.0%
+2026-01-19 04:23:48,915 BoA.train INFO: CMC curve, Rank-10 :92.7%
+2026-01-19 04:23:48,915 BoA.train INFO: Best mAP: 80.0%
+2026-01-19 04:23:48,915 BoA.train INFO: Best Rank-1: 81.2%
+2026-01-19 04:23:48,915 BoA.train INFO: Best Rank-5: 89.8%
+2026-01-19 04:23:48,915 BoA.train INFO: Best Rank-10: 93.4%
+2026-01-19 04:23:52,386 BoA.train INFO: Epoch[52] Iteration[10/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.81e-04
+2026-01-19 04:23:54,904 BoA.train INFO: Epoch[52] Iteration[20/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.81e-04
+2026-01-19 04:23:57,449 BoA.train INFO: Epoch[52] Iteration[30/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.81e-04
+2026-01-19 04:23:59,951 BoA.train INFO: Epoch[52] Iteration[40/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.81e-04
+2026-01-19 04:24:02,414 BoA.train INFO: Epoch[52] Iteration[50/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.81e-04
+2026-01-19 04:24:04,434 BoA.train INFO: Epoch 52 done. Time per batch: 0.265[s] Speed: 242.0[samples/s]
+2026-01-19 04:24:10,507 BoA.train INFO: Validation Results - Epoch: 52
+2026-01-19 04:24:10,507 BoA.train INFO: mAP: 78.6%
+2026-01-19 04:24:10,507 BoA.train INFO: CMC curve, Rank-1  :81.3%
+2026-01-19 04:24:10,507 BoA.train INFO: CMC curve, Rank-5  :88.6%
+2026-01-19 04:24:10,507 BoA.train INFO: CMC curve, Rank-10 :92.8%
+2026-01-19 04:24:10,507 BoA.train INFO: Best mAP: 80.0%
+2026-01-19 04:24:10,507 BoA.train INFO: Best Rank-1: 81.2%
+2026-01-19 04:24:10,507 BoA.train INFO: Best Rank-5: 89.8%
+2026-01-19 04:24:10,507 BoA.train INFO: Best Rank-10: 93.4%
+2026-01-19 04:24:13,889 BoA.train INFO: Epoch[53] Iteration[10/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.77e-04
+2026-01-19 04:24:16,361 BoA.train INFO: Epoch[53] Iteration[20/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.77e-04
+2026-01-19 04:24:18,798 BoA.train INFO: Epoch[53] Iteration[30/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.77e-04
+2026-01-19 04:24:21,228 BoA.train INFO: Epoch[53] Iteration[40/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.77e-04
+2026-01-19 04:24:23,627 BoA.train INFO: Epoch[53] Iteration[50/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.77e-04
+2026-01-19 04:24:25,398 BoA.train INFO: Epoch 53 done. Time per batch: 0.258[s] Speed: 247.9[samples/s]
+2026-01-19 04:24:31,351 BoA.train INFO: Validation Results - Epoch: 53
+2026-01-19 04:24:31,351 BoA.train INFO: mAP: 79.1%
+2026-01-19 04:24:31,351 BoA.train INFO: CMC curve, Rank-1  :81.1%
+2026-01-19 04:24:31,351 BoA.train INFO: CMC curve, Rank-5  :89.1%
+2026-01-19 04:24:31,351 BoA.train INFO: CMC curve, Rank-10 :92.3%
+2026-01-19 04:24:31,351 BoA.train INFO: Best mAP: 80.0%
+2026-01-19 04:24:31,351 BoA.train INFO: Best Rank-1: 81.2%
+2026-01-19 04:24:31,351 BoA.train INFO: Best Rank-5: 89.8%
+2026-01-19 04:24:31,351 BoA.train INFO: Best Rank-10: 93.4%
+2026-01-19 04:24:34,719 BoA.train INFO: Epoch[54] Iteration[10/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.74e-04
+2026-01-19 04:24:37,156 BoA.train INFO: Epoch[54] Iteration[20/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.74e-04
+2026-01-19 04:24:39,617 BoA.train INFO: Epoch[54] Iteration[30/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.74e-04
+2026-01-19 04:24:42,081 BoA.train INFO: Epoch[54] Iteration[40/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.74e-04
+2026-01-19 04:24:44,505 BoA.train INFO: Epoch[54] Iteration[50/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.74e-04
+2026-01-19 04:24:46,276 BoA.train INFO: Epoch 54 done. Time per batch: 0.259[s] Speed: 247.5[samples/s]
+2026-01-19 04:24:52,237 BoA.train INFO: Validation Results - Epoch: 54
+2026-01-19 04:24:52,237 BoA.train INFO: mAP: 81.3%
+2026-01-19 04:24:52,237 BoA.train INFO: CMC curve, Rank-1  :82.2%
+2026-01-19 04:24:52,237 BoA.train INFO: CMC curve, Rank-5  :90.3%
+2026-01-19 04:24:52,237 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:24:52,549 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:24:52,549 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:24:52,549 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:24:52,549 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:24:55,917 BoA.train INFO: Epoch[55] Iteration[10/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.70e-04
+2026-01-19 04:24:58,387 BoA.train INFO: Epoch[55] Iteration[20/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.70e-04
+2026-01-19 04:25:00,866 BoA.train INFO: Epoch[55] Iteration[30/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.70e-04
+2026-01-19 04:25:03,480 BoA.train INFO: Epoch[55] Iteration[40/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.70e-04
+2026-01-19 04:25:05,903 BoA.train INFO: Epoch[55] Iteration[50/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.70e-04
+2026-01-19 04:25:07,696 BoA.train INFO: Epoch 55 done. Time per batch: 0.263[s] Speed: 243.7[samples/s]
+2026-01-19 04:25:13,656 BoA.train INFO: Validation Results - Epoch: 55
+2026-01-19 04:25:13,656 BoA.train INFO: mAP: 80.3%
+2026-01-19 04:25:13,656 BoA.train INFO: CMC curve, Rank-1  :82.4%
+2026-01-19 04:25:13,657 BoA.train INFO: CMC curve, Rank-5  :90.1%
+2026-01-19 04:25:13,657 BoA.train INFO: CMC curve, Rank-10 :94.3%
+2026-01-19 04:25:13,657 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:25:13,657 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:25:13,657 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:25:13,657 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:25:17,074 BoA.train INFO: Epoch[56] Iteration[10/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.66e-04
+2026-01-19 04:25:19,555 BoA.train INFO: Epoch[56] Iteration[20/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.66e-04
+2026-01-19 04:25:22,020 BoA.train INFO: Epoch[56] Iteration[30/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.66e-04
+2026-01-19 04:25:24,487 BoA.train INFO: Epoch[56] Iteration[40/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.66e-04
+2026-01-19 04:25:26,930 BoA.train INFO: Epoch[56] Iteration[50/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.66e-04
+2026-01-19 04:25:28,707 BoA.train INFO: Epoch 56 done. Time per batch: 0.261[s] Speed: 245.3[samples/s]
+2026-01-19 04:25:34,538 BoA.train INFO: Validation Results - Epoch: 56
+2026-01-19 04:25:34,538 BoA.train INFO: mAP: 80.6%
+2026-01-19 04:25:34,538 BoA.train INFO: CMC curve, Rank-1  :83.1%
+2026-01-19 04:25:34,538 BoA.train INFO: CMC curve, Rank-5  :90.0%
+2026-01-19 04:25:34,538 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:25:34,538 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:25:34,538 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:25:34,538 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:25:34,538 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:25:38,250 BoA.train INFO: Epoch[57] Iteration[10/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.62e-04
+2026-01-19 04:25:40,770 BoA.train INFO: Epoch[57] Iteration[20/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.62e-04
+2026-01-19 04:25:43,292 BoA.train INFO: Epoch[57] Iteration[30/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.62e-04
+2026-01-19 04:25:45,776 BoA.train INFO: Epoch[57] Iteration[40/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.62e-04
+2026-01-19 04:25:48,214 BoA.train INFO: Epoch[57] Iteration[50/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.62e-04
+2026-01-19 04:25:49,987 BoA.train INFO: Epoch 57 done. Time per batch: 0.266[s] Speed: 240.6[samples/s]
+2026-01-19 04:25:55,977 BoA.train INFO: Validation Results - Epoch: 57
+2026-01-19 04:25:55,977 BoA.train INFO: mAP: 79.3%
+2026-01-19 04:25:55,977 BoA.train INFO: CMC curve, Rank-1  :83.5%
+2026-01-19 04:25:55,977 BoA.train INFO: CMC curve, Rank-5  :90.9%
+2026-01-19 04:25:55,977 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:25:55,977 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:25:55,977 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:25:55,977 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:25:55,977 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:25:59,350 BoA.train INFO: Epoch[58] Iteration[10/59] Loss: 0.225, Acc: 1.000, Base Lr: 1.58e-04
+2026-01-19 04:26:01,835 BoA.train INFO: Epoch[58] Iteration[20/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.58e-04
+2026-01-19 04:26:04,371 BoA.train INFO: Epoch[58] Iteration[30/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.58e-04
+2026-01-19 04:26:06,890 BoA.train INFO: Epoch[58] Iteration[40/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.58e-04
+2026-01-19 04:26:09,322 BoA.train INFO: Epoch[58] Iteration[50/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.58e-04
+2026-01-19 04:26:11,083 BoA.train INFO: Epoch 58 done. Time per batch: 0.262[s] Speed: 244.4[samples/s]
+2026-01-19 04:26:17,014 BoA.train INFO: Validation Results - Epoch: 58
+2026-01-19 04:26:17,014 BoA.train INFO: mAP: 78.4%
+2026-01-19 04:26:17,014 BoA.train INFO: CMC curve, Rank-1  :81.5%
+2026-01-19 04:26:17,015 BoA.train INFO: CMC curve, Rank-5  :90.1%
+2026-01-19 04:26:17,015 BoA.train INFO: CMC curve, Rank-10 :92.6%
+2026-01-19 04:26:17,015 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:26:17,015 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:26:17,015 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:26:17,015 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:26:20,407 BoA.train INFO: Epoch[59] Iteration[10/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.54e-04
+2026-01-19 04:26:22,909 BoA.train INFO: Epoch[59] Iteration[20/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.54e-04
+2026-01-19 04:26:25,418 BoA.train INFO: Epoch[59] Iteration[30/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.54e-04
+2026-01-19 04:26:27,875 BoA.train INFO: Epoch[59] Iteration[40/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.54e-04
+2026-01-19 04:26:30,289 BoA.train INFO: Epoch[59] Iteration[50/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.54e-04
+2026-01-19 04:26:32,311 BoA.train INFO: Epoch 59 done. Time per batch: 0.261[s] Speed: 245.5[samples/s]
+2026-01-19 04:26:38,268 BoA.train INFO: Validation Results - Epoch: 59
+2026-01-19 04:26:38,268 BoA.train INFO: mAP: 77.8%
+2026-01-19 04:26:38,268 BoA.train INFO: CMC curve, Rank-1  :80.5%
+2026-01-19 04:26:38,268 BoA.train INFO: CMC curve, Rank-5  :88.3%
+2026-01-19 04:26:38,268 BoA.train INFO: CMC curve, Rank-10 :91.9%
+2026-01-19 04:26:38,268 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:26:38,268 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:26:38,268 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:26:38,268 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:26:41,622 BoA.train INFO: Epoch[60] Iteration[10/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.50e-04
+2026-01-19 04:26:44,097 BoA.train INFO: Epoch[60] Iteration[20/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.50e-04
+2026-01-19 04:26:46,552 BoA.train INFO: Epoch[60] Iteration[30/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.50e-04
+2026-01-19 04:26:48,995 BoA.train INFO: Epoch[60] Iteration[40/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.50e-04
+2026-01-19 04:26:51,466 BoA.train INFO: Epoch[60] Iteration[50/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.50e-04
+2026-01-19 04:26:53,242 BoA.train INFO: Epoch 60 done. Time per batch: 0.260[s] Speed: 246.5[samples/s]
+2026-01-19 04:26:59,956 BoA.train INFO: Validation Results - Epoch: 60
+2026-01-19 04:26:59,956 BoA.train INFO: mAP: 78.2%
+2026-01-19 04:26:59,956 BoA.train INFO: CMC curve, Rank-1  :81.0%
+2026-01-19 04:26:59,956 BoA.train INFO: CMC curve, Rank-5  :89.1%
+2026-01-19 04:26:59,956 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:26:59,956 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:26:59,956 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:26:59,956 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:26:59,956 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:27:03,411 BoA.train INFO: Epoch[61] Iteration[10/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.46e-04
+2026-01-19 04:27:05,903 BoA.train INFO: Epoch[61] Iteration[20/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.46e-04
+2026-01-19 04:27:08,383 BoA.train INFO: Epoch[61] Iteration[30/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.46e-04
+2026-01-19 04:27:10,859 BoA.train INFO: Epoch[61] Iteration[40/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.46e-04
+2026-01-19 04:27:13,306 BoA.train INFO: Epoch[61] Iteration[50/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.46e-04
+2026-01-19 04:27:15,062 BoA.train INFO: Epoch 61 done. Time per batch: 0.262[s] Speed: 244.4[samples/s]
+2026-01-19 04:27:20,953 BoA.train INFO: Validation Results - Epoch: 61
+2026-01-19 04:27:20,953 BoA.train INFO: mAP: 78.4%
+2026-01-19 04:27:20,953 BoA.train INFO: CMC curve, Rank-1  :81.2%
+2026-01-19 04:27:20,953 BoA.train INFO: CMC curve, Rank-5  :88.5%
+2026-01-19 04:27:20,953 BoA.train INFO: CMC curve, Rank-10 :91.4%
+2026-01-19 04:27:20,953 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:27:20,953 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:27:20,953 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:27:20,953 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:27:24,375 BoA.train INFO: Epoch[62] Iteration[10/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.42e-04
+2026-01-19 04:27:26,796 BoA.train INFO: Epoch[62] Iteration[20/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.42e-04
+2026-01-19 04:27:29,226 BoA.train INFO: Epoch[62] Iteration[30/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.42e-04
+2026-01-19 04:27:31,645 BoA.train INFO: Epoch[62] Iteration[40/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.42e-04
+2026-01-19 04:27:34,046 BoA.train INFO: Epoch[62] Iteration[50/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.42e-04
+2026-01-19 04:27:35,785 BoA.train INFO: Epoch 62 done. Time per batch: 0.257[s] Speed: 248.9[samples/s]
+2026-01-19 04:27:41,659 BoA.train INFO: Validation Results - Epoch: 62
+2026-01-19 04:27:41,659 BoA.train INFO: mAP: 79.2%
+2026-01-19 04:27:41,659 BoA.train INFO: CMC curve, Rank-1  :81.9%
+2026-01-19 04:27:41,659 BoA.train INFO: CMC curve, Rank-5  :88.0%
+2026-01-19 04:27:41,659 BoA.train INFO: CMC curve, Rank-10 :91.6%
+2026-01-19 04:27:41,659 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:27:41,659 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:27:41,659 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:27:41,659 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:27:45,094 BoA.train INFO: Epoch[63] Iteration[10/59] Loss: 0.218, Acc: 1.000, Base Lr: 1.38e-04
+2026-01-19 04:27:47,597 BoA.train INFO: Epoch[63] Iteration[20/59] Loss: 0.218, Acc: 1.000, Base Lr: 1.38e-04
+2026-01-19 04:27:50,056 BoA.train INFO: Epoch[63] Iteration[30/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.38e-04
+2026-01-19 04:27:52,539 BoA.train INFO: Epoch[63] Iteration[40/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.38e-04
+2026-01-19 04:27:54,992 BoA.train INFO: Epoch[63] Iteration[50/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.38e-04
+2026-01-19 04:27:56,773 BoA.train INFO: Epoch 63 done. Time per batch: 0.262[s] Speed: 244.2[samples/s]
+2026-01-19 04:28:02,667 BoA.train INFO: Validation Results - Epoch: 63
+2026-01-19 04:28:02,668 BoA.train INFO: mAP: 76.8%
+2026-01-19 04:28:02,668 BoA.train INFO: CMC curve, Rank-1  :81.0%
+2026-01-19 04:28:02,668 BoA.train INFO: CMC curve, Rank-5  :88.8%
+2026-01-19 04:28:02,668 BoA.train INFO: CMC curve, Rank-10 :91.6%
+2026-01-19 04:28:02,668 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:28:02,668 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:28:02,668 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:28:02,668 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:28:06,205 BoA.train INFO: Epoch[64] Iteration[10/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.34e-04
+2026-01-19 04:28:08,671 BoA.train INFO: Epoch[64] Iteration[20/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.34e-04
+2026-01-19 04:28:11,137 BoA.train INFO: Epoch[64] Iteration[30/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.34e-04
+2026-01-19 04:28:13,625 BoA.train INFO: Epoch[64] Iteration[40/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.34e-04
+2026-01-19 04:28:16,037 BoA.train INFO: Epoch[64] Iteration[50/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.34e-04
+2026-01-19 04:28:17,804 BoA.train INFO: Epoch 64 done. Time per batch: 0.261[s] Speed: 245.6[samples/s]
+2026-01-19 04:28:23,708 BoA.train INFO: Validation Results - Epoch: 64
+2026-01-19 04:28:23,708 BoA.train INFO: mAP: 75.7%
+2026-01-19 04:28:23,708 BoA.train INFO: CMC curve, Rank-1  :79.9%
+2026-01-19 04:28:23,708 BoA.train INFO: CMC curve, Rank-5  :87.8%
+2026-01-19 04:28:23,708 BoA.train INFO: CMC curve, Rank-10 :91.3%
+2026-01-19 04:28:23,708 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:28:23,708 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:28:23,708 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:28:23,708 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:28:27,023 BoA.train INFO: Epoch[65] Iteration[10/59] Loss: 0.229, Acc: 1.000, Base Lr: 1.31e-04
+2026-01-19 04:28:29,447 BoA.train INFO: Epoch[65] Iteration[20/59] Loss: 0.228, Acc: 1.000, Base Lr: 1.31e-04
+2026-01-19 04:28:31,893 BoA.train INFO: Epoch[65] Iteration[30/59] Loss: 0.226, Acc: 1.000, Base Lr: 1.31e-04
+2026-01-19 04:28:34,312 BoA.train INFO: Epoch[65] Iteration[40/59] Loss: 0.225, Acc: 1.000, Base Lr: 1.31e-04
+2026-01-19 04:28:36,730 BoA.train INFO: Epoch[65] Iteration[50/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.31e-04
+2026-01-19 04:28:38,698 BoA.train INFO: Epoch 65 done. Time per batch: 0.255[s] Speed: 250.6[samples/s]
+2026-01-19 04:28:44,448 BoA.train INFO: Validation Results - Epoch: 65
+2026-01-19 04:28:44,448 BoA.train INFO: mAP: 73.0%
+2026-01-19 04:28:44,448 BoA.train INFO: CMC curve, Rank-1  :76.1%
+2026-01-19 04:28:44,448 BoA.train INFO: CMC curve, Rank-5  :87.6%
+2026-01-19 04:28:44,448 BoA.train INFO: CMC curve, Rank-10 :90.3%
+2026-01-19 04:28:44,448 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:28:44,448 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:28:44,448 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:28:44,448 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:28:47,707 BoA.train INFO: Epoch[66] Iteration[10/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.27e-04
+2026-01-19 04:28:50,164 BoA.train INFO: Epoch[66] Iteration[20/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.27e-04
+2026-01-19 04:28:52,620 BoA.train INFO: Epoch[66] Iteration[30/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.27e-04
+2026-01-19 04:28:55,082 BoA.train INFO: Epoch[66] Iteration[40/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.27e-04
+2026-01-19 04:28:57,507 BoA.train INFO: Epoch[66] Iteration[50/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.27e-04
+2026-01-19 04:28:59,276 BoA.train INFO: Epoch 66 done. Time per batch: 0.257[s] Speed: 249.0[samples/s]
+2026-01-19 04:29:05,052 BoA.train INFO: Validation Results - Epoch: 66
+2026-01-19 04:29:05,052 BoA.train INFO: mAP: 71.3%
+2026-01-19 04:29:05,052 BoA.train INFO: CMC curve, Rank-1  :75.6%
+2026-01-19 04:29:05,052 BoA.train INFO: CMC curve, Rank-5  :86.5%
+2026-01-19 04:29:05,052 BoA.train INFO: CMC curve, Rank-10 :92.0%
+2026-01-19 04:29:05,052 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:29:05,052 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:29:05,052 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:29:05,052 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:29:08,423 BoA.train INFO: Epoch[67] Iteration[10/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.23e-04
+2026-01-19 04:29:10,907 BoA.train INFO: Epoch[67] Iteration[20/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.23e-04
+2026-01-19 04:29:13,378 BoA.train INFO: Epoch[67] Iteration[30/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.23e-04
+2026-01-19 04:29:15,879 BoA.train INFO: Epoch[67] Iteration[40/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.23e-04
+2026-01-19 04:29:18,290 BoA.train INFO: Epoch[67] Iteration[50/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.23e-04
+2026-01-19 04:29:20,058 BoA.train INFO: Epoch 67 done. Time per batch: 0.260[s] Speed: 246.0[samples/s]
+2026-01-19 04:29:26,089 BoA.train INFO: Validation Results - Epoch: 67
+2026-01-19 04:29:26,089 BoA.train INFO: mAP: 76.7%
+2026-01-19 04:29:26,089 BoA.train INFO: CMC curve, Rank-1  :79.4%
+2026-01-19 04:29:26,089 BoA.train INFO: CMC curve, Rank-5  :87.9%
+2026-01-19 04:29:26,089 BoA.train INFO: CMC curve, Rank-10 :91.1%
+2026-01-19 04:29:26,089 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:29:26,089 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:29:26,089 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:29:26,089 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:29:29,517 BoA.train INFO: Epoch[68] Iteration[10/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.19e-04
+2026-01-19 04:29:31,974 BoA.train INFO: Epoch[68] Iteration[20/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.19e-04
+2026-01-19 04:29:34,424 BoA.train INFO: Epoch[68] Iteration[30/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.19e-04
+2026-01-19 04:29:36,891 BoA.train INFO: Epoch[68] Iteration[40/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.19e-04
+2026-01-19 04:29:39,354 BoA.train INFO: Epoch[68] Iteration[50/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.19e-04
+2026-01-19 04:29:41,104 BoA.train INFO: Epoch 68 done. Time per batch: 0.260[s] Speed: 245.9[samples/s]
+2026-01-19 04:29:46,823 BoA.train INFO: Validation Results - Epoch: 68
+2026-01-19 04:29:46,823 BoA.train INFO: mAP: 79.0%
+2026-01-19 04:29:46,823 BoA.train INFO: CMC curve, Rank-1  :82.4%
+2026-01-19 04:29:46,823 BoA.train INFO: CMC curve, Rank-5  :89.4%
+2026-01-19 04:29:46,823 BoA.train INFO: CMC curve, Rank-10 :92.3%
+2026-01-19 04:29:46,823 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:29:46,823 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:29:46,823 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:29:46,823 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:29:50,123 BoA.train INFO: Epoch[69] Iteration[10/59] Loss: 0.221, Acc: 1.000, Base Lr: 1.15e-04
+2026-01-19 04:29:52,577 BoA.train INFO: Epoch[69] Iteration[20/59] Loss: 0.224, Acc: 1.000, Base Lr: 1.15e-04
+2026-01-19 04:29:55,082 BoA.train INFO: Epoch[69] Iteration[30/59] Loss: 0.223, Acc: 1.000, Base Lr: 1.15e-04
+2026-01-19 04:29:57,600 BoA.train INFO: Epoch[69] Iteration[40/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.15e-04
+2026-01-19 04:30:00,063 BoA.train INFO: Epoch[69] Iteration[50/59] Loss: 0.222, Acc: 1.000, Base Lr: 1.15e-04
+2026-01-19 04:30:01,856 BoA.train INFO: Epoch 69 done. Time per batch: 0.261[s] Speed: 245.6[samples/s]
+2026-01-19 04:30:07,745 BoA.train INFO: Validation Results - Epoch: 69
+2026-01-19 04:30:07,745 BoA.train INFO: mAP: 77.1%
+2026-01-19 04:30:07,745 BoA.train INFO: CMC curve, Rank-1  :81.7%
+2026-01-19 04:30:07,745 BoA.train INFO: CMC curve, Rank-5  :88.6%
+2026-01-19 04:30:07,745 BoA.train INFO: CMC curve, Rank-10 :92.7%
+2026-01-19 04:30:07,745 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:30:07,745 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:30:07,745 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:30:07,745 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:30:11,116 BoA.train INFO: Epoch[70] Iteration[10/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.11e-04
+2026-01-19 04:30:13,584 BoA.train INFO: Epoch[70] Iteration[20/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.11e-04
+2026-01-19 04:30:16,043 BoA.train INFO: Epoch[70] Iteration[30/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.11e-04
+2026-01-19 04:30:18,474 BoA.train INFO: Epoch[70] Iteration[40/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.11e-04
+2026-01-19 04:30:20,923 BoA.train INFO: Epoch[70] Iteration[50/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.11e-04
+2026-01-19 04:30:22,694 BoA.train INFO: Epoch 70 done. Time per batch: 0.259[s] Speed: 247.0[samples/s]
+2026-01-19 04:30:28,473 BoA.train INFO: Validation Results - Epoch: 70
+2026-01-19 04:30:28,474 BoA.train INFO: mAP: 74.5%
+2026-01-19 04:30:28,474 BoA.train INFO: CMC curve, Rank-1  :77.3%
+2026-01-19 04:30:28,474 BoA.train INFO: CMC curve, Rank-5  :84.8%
+2026-01-19 04:30:28,474 BoA.train INFO: CMC curve, Rank-10 :89.2%
+2026-01-19 04:30:28,474 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:30:28,474 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:30:28,474 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:30:28,474 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:30:31,804 BoA.train INFO: Epoch[71] Iteration[10/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.08e-04
+2026-01-19 04:30:34,241 BoA.train INFO: Epoch[71] Iteration[20/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.08e-04
+2026-01-19 04:30:36,669 BoA.train INFO: Epoch[71] Iteration[30/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.08e-04
+2026-01-19 04:30:39,122 BoA.train INFO: Epoch[71] Iteration[40/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.08e-04
+2026-01-19 04:30:41,547 BoA.train INFO: Epoch[71] Iteration[50/59] Loss: 0.220, Acc: 1.000, Base Lr: 1.08e-04
+2026-01-19 04:30:43,336 BoA.train INFO: Epoch 71 done. Time per batch: 0.257[s] Speed: 248.9[samples/s]
+2026-01-19 04:30:49,066 BoA.train INFO: Validation Results - Epoch: 71
+2026-01-19 04:30:49,066 BoA.train INFO: mAP: 75.8%
+2026-01-19 04:30:49,066 BoA.train INFO: CMC curve, Rank-1  :78.6%
+2026-01-19 04:30:49,066 BoA.train INFO: CMC curve, Rank-5  :86.6%
+2026-01-19 04:30:49,066 BoA.train INFO: CMC curve, Rank-10 :90.2%
+2026-01-19 04:30:49,066 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:30:49,066 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:30:49,066 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:30:49,066 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:30:52,361 BoA.train INFO: Epoch[72] Iteration[10/59] Loss: 0.218, Acc: 1.000, Base Lr: 1.04e-04
+2026-01-19 04:30:54,831 BoA.train INFO: Epoch[72] Iteration[20/59] Loss: 0.218, Acc: 1.000, Base Lr: 1.04e-04
+2026-01-19 04:30:57,308 BoA.train INFO: Epoch[72] Iteration[30/59] Loss: 0.218, Acc: 1.000, Base Lr: 1.04e-04
+2026-01-19 04:30:59,765 BoA.train INFO: Epoch[72] Iteration[40/59] Loss: 0.218, Acc: 1.000, Base Lr: 1.04e-04
+2026-01-19 04:31:02,225 BoA.train INFO: Epoch[72] Iteration[50/59] Loss: 0.219, Acc: 1.000, Base Lr: 1.04e-04
+2026-01-19 04:31:04,005 BoA.train INFO: Epoch 72 done. Time per batch: 0.259[s] Speed: 247.1[samples/s]
+2026-01-19 04:31:10,206 BoA.train INFO: Validation Results - Epoch: 72
+2026-01-19 04:31:10,206 BoA.train INFO: mAP: 76.4%
+2026-01-19 04:31:10,206 BoA.train INFO: CMC curve, Rank-1  :79.5%
+2026-01-19 04:31:10,206 BoA.train INFO: CMC curve, Rank-5  :87.0%
+2026-01-19 04:31:10,206 BoA.train INFO: CMC curve, Rank-10 :92.0%
+2026-01-19 04:31:10,206 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:31:10,206 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:31:10,206 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:31:10,206 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:31:13,652 BoA.train INFO: Epoch[73] Iteration[10/59] Loss: 0.218, Acc: 1.000, Base Lr: 1.00e-04
+2026-01-19 04:31:16,086 BoA.train INFO: Epoch[73] Iteration[20/59] Loss: 0.218, Acc: 1.000, Base Lr: 1.00e-04
+2026-01-19 04:31:18,518 BoA.train INFO: Epoch[73] Iteration[30/59] Loss: 0.217, Acc: 1.000, Base Lr: 1.00e-04
+2026-01-19 04:31:20,972 BoA.train INFO: Epoch[73] Iteration[40/59] Loss: 0.217, Acc: 1.000, Base Lr: 1.00e-04
+2026-01-19 04:31:23,397 BoA.train INFO: Epoch[73] Iteration[50/59] Loss: 0.217, Acc: 1.000, Base Lr: 1.00e-04
+2026-01-19 04:31:25,154 BoA.train INFO: Epoch 73 done. Time per batch: 0.259[s] Speed: 247.0[samples/s]
+2026-01-19 04:31:31,401 BoA.train INFO: Validation Results - Epoch: 73
+2026-01-19 04:31:31,401 BoA.train INFO: mAP: 75.7%
+2026-01-19 04:31:31,401 BoA.train INFO: CMC curve, Rank-1  :79.1%
+2026-01-19 04:31:31,401 BoA.train INFO: CMC curve, Rank-5  :87.3%
+2026-01-19 04:31:31,401 BoA.train INFO: CMC curve, Rank-10 :91.7%
+2026-01-19 04:31:31,401 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:31:31,401 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:31:31,401 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:31:31,401 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:31:34,831 BoA.train INFO: Epoch[74] Iteration[10/59] Loss: 0.217, Acc: 1.000, Base Lr: 9.64e-05
+2026-01-19 04:31:37,265 BoA.train INFO: Epoch[74] Iteration[20/59] Loss: 0.217, Acc: 1.000, Base Lr: 9.64e-05
+2026-01-19 04:31:39,700 BoA.train INFO: Epoch[74] Iteration[30/59] Loss: 0.218, Acc: 1.000, Base Lr: 9.64e-05
+2026-01-19 04:31:42,132 BoA.train INFO: Epoch[74] Iteration[40/59] Loss: 0.218, Acc: 1.000, Base Lr: 9.64e-05
+2026-01-19 04:31:44,579 BoA.train INFO: Epoch[74] Iteration[50/59] Loss: 0.218, Acc: 1.000, Base Lr: 9.64e-05
+2026-01-19 04:31:46,342 BoA.train INFO: Epoch 74 done. Time per batch: 0.259[s] Speed: 247.1[samples/s]
+2026-01-19 04:31:52,184 BoA.train INFO: Validation Results - Epoch: 74
+2026-01-19 04:31:52,184 BoA.train INFO: mAP: 76.7%
+2026-01-19 04:31:52,184 BoA.train INFO: CMC curve, Rank-1  :81.0%
+2026-01-19 04:31:52,184 BoA.train INFO: CMC curve, Rank-5  :89.7%
+2026-01-19 04:31:52,184 BoA.train INFO: CMC curve, Rank-10 :92.9%
+2026-01-19 04:31:52,184 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:31:52,184 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:31:52,184 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:31:52,184 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:31:55,527 BoA.train INFO: Epoch[75] Iteration[10/59] Loss: 0.218, Acc: 1.000, Base Lr: 9.28e-05
+2026-01-19 04:31:57,992 BoA.train INFO: Epoch[75] Iteration[20/59] Loss: 0.218, Acc: 1.000, Base Lr: 9.28e-05
+2026-01-19 04:32:00,449 BoA.train INFO: Epoch[75] Iteration[30/59] Loss: 0.219, Acc: 1.000, Base Lr: 9.28e-05
+2026-01-19 04:32:02,899 BoA.train INFO: Epoch[75] Iteration[40/59] Loss: 0.218, Acc: 1.000, Base Lr: 9.28e-05
+2026-01-19 04:32:05,367 BoA.train INFO: Epoch[75] Iteration[50/59] Loss: 0.218, Acc: 1.000, Base Lr: 9.28e-05
+2026-01-19 04:32:07,099 BoA.train INFO: Epoch 75 done. Time per batch: 0.259[s] Speed: 247.5[samples/s]
+2026-01-19 04:32:13,266 BoA.train INFO: Validation Results - Epoch: 75
+2026-01-19 04:32:13,267 BoA.train INFO: mAP: 79.5%
+2026-01-19 04:32:13,267 BoA.train INFO: CMC curve, Rank-1  :83.1%
+2026-01-19 04:32:13,267 BoA.train INFO: CMC curve, Rank-5  :89.5%
+2026-01-19 04:32:13,267 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:32:13,267 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:32:13,267 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:32:13,267 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:32:13,267 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:32:16,706 BoA.train INFO: Epoch[76] Iteration[10/59] Loss: 0.217, Acc: 1.000, Base Lr: 8.92e-05
+2026-01-19 04:32:19,213 BoA.train INFO: Epoch[76] Iteration[20/59] Loss: 0.217, Acc: 1.000, Base Lr: 8.92e-05
+2026-01-19 04:32:21,703 BoA.train INFO: Epoch[76] Iteration[30/59] Loss: 0.217, Acc: 1.000, Base Lr: 8.92e-05
+2026-01-19 04:32:24,226 BoA.train INFO: Epoch[76] Iteration[40/59] Loss: 0.218, Acc: 1.000, Base Lr: 8.92e-05
+2026-01-19 04:32:26,650 BoA.train INFO: Epoch[76] Iteration[50/59] Loss: 0.218, Acc: 1.000, Base Lr: 8.92e-05
+2026-01-19 04:32:28,424 BoA.train INFO: Epoch 76 done. Time per batch: 0.263[s] Speed: 243.6[samples/s]
+2026-01-19 04:32:34,218 BoA.train INFO: Validation Results - Epoch: 76
+2026-01-19 04:32:34,218 BoA.train INFO: mAP: 73.9%
+2026-01-19 04:32:34,218 BoA.train INFO: CMC curve, Rank-1  :78.8%
+2026-01-19 04:32:34,218 BoA.train INFO: CMC curve, Rank-5  :87.9%
+2026-01-19 04:32:34,219 BoA.train INFO: CMC curve, Rank-10 :92.0%
+2026-01-19 04:32:34,219 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:32:34,219 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:32:34,219 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:32:34,219 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:32:37,611 BoA.train INFO: Epoch[77] Iteration[10/59] Loss: 0.218, Acc: 1.000, Base Lr: 8.56e-05
+2026-01-19 04:32:40,077 BoA.train INFO: Epoch[77] Iteration[20/59] Loss: 0.222, Acc: 1.000, Base Lr: 8.56e-05
+2026-01-19 04:32:42,512 BoA.train INFO: Epoch[77] Iteration[30/59] Loss: 0.221, Acc: 1.000, Base Lr: 8.56e-05
+2026-01-19 04:32:44,934 BoA.train INFO: Epoch[77] Iteration[40/59] Loss: 0.220, Acc: 1.000, Base Lr: 8.56e-05
+2026-01-19 04:32:47,349 BoA.train INFO: Epoch[77] Iteration[50/59] Loss: 0.220, Acc: 1.000, Base Lr: 8.56e-05
+2026-01-19 04:32:49,330 BoA.train INFO: Epoch 77 done. Time per batch: 0.257[s] Speed: 248.6[samples/s]
+2026-01-19 04:32:55,113 BoA.train INFO: Validation Results - Epoch: 77
+2026-01-19 04:32:55,114 BoA.train INFO: mAP: 78.3%
+2026-01-19 04:32:55,114 BoA.train INFO: CMC curve, Rank-1  :82.1%
+2026-01-19 04:32:55,114 BoA.train INFO: CMC curve, Rank-5  :89.6%
+2026-01-19 04:32:55,114 BoA.train INFO: CMC curve, Rank-10 :92.8%
+2026-01-19 04:32:55,114 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:32:55,114 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:32:55,114 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:32:55,114 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:32:58,447 BoA.train INFO: Epoch[78] Iteration[10/59] Loss: 0.218, Acc: 1.000, Base Lr: 8.21e-05
+2026-01-19 04:33:00,918 BoA.train INFO: Epoch[78] Iteration[20/59] Loss: 0.217, Acc: 1.000, Base Lr: 8.21e-05
+2026-01-19 04:33:03,353 BoA.train INFO: Epoch[78] Iteration[30/59] Loss: 0.217, Acc: 1.000, Base Lr: 8.21e-05
+2026-01-19 04:33:05,799 BoA.train INFO: Epoch[78] Iteration[40/59] Loss: 0.217, Acc: 1.000, Base Lr: 8.21e-05
+2026-01-19 04:33:08,235 BoA.train INFO: Epoch[78] Iteration[50/59] Loss: 0.217, Acc: 1.000, Base Lr: 8.21e-05
+2026-01-19 04:33:09,986 BoA.train INFO: Epoch 78 done. Time per batch: 0.258[s] Speed: 248.5[samples/s]
+2026-01-19 04:33:15,891 BoA.train INFO: Validation Results - Epoch: 78
+2026-01-19 04:33:15,891 BoA.train INFO: mAP: 78.6%
+2026-01-19 04:33:15,891 BoA.train INFO: CMC curve, Rank-1  :83.4%
+2026-01-19 04:33:15,891 BoA.train INFO: CMC curve, Rank-5  :90.1%
+2026-01-19 04:33:15,891 BoA.train INFO: CMC curve, Rank-10 :93.1%
+2026-01-19 04:33:15,892 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:33:15,892 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:33:15,892 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:33:15,892 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:33:19,306 BoA.train INFO: Epoch[79] Iteration[10/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.86e-05
+2026-01-19 04:33:21,846 BoA.train INFO: Epoch[79] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.86e-05
+2026-01-19 04:33:24,369 BoA.train INFO: Epoch[79] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.86e-05
+2026-01-19 04:33:26,897 BoA.train INFO: Epoch[79] Iteration[40/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.86e-05
+2026-01-19 04:33:29,372 BoA.train INFO: Epoch[79] Iteration[50/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.86e-05
+2026-01-19 04:33:31,383 BoA.train INFO: Epoch 79 done. Time per batch: 0.264[s] Speed: 242.7[samples/s]
+2026-01-19 04:33:37,282 BoA.train INFO: Validation Results - Epoch: 79
+2026-01-19 04:33:37,282 BoA.train INFO: mAP: 80.3%
+2026-01-19 04:33:37,282 BoA.train INFO: CMC curve, Rank-1  :84.9%
+2026-01-19 04:33:37,282 BoA.train INFO: CMC curve, Rank-5  :90.7%
+2026-01-19 04:33:37,282 BoA.train INFO: CMC curve, Rank-10 :93.9%
+2026-01-19 04:33:37,282 BoA.train INFO: Best mAP: 81.3%
+2026-01-19 04:33:37,282 BoA.train INFO: Best Rank-1: 82.2%
+2026-01-19 04:33:37,282 BoA.train INFO: Best Rank-5: 90.3%
+2026-01-19 04:33:37,282 BoA.train INFO: Best Rank-10: 93.7%
+2026-01-19 04:33:40,649 BoA.train INFO: Epoch[80] Iteration[10/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.52e-05
+2026-01-19 04:33:43,102 BoA.train INFO: Epoch[80] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.52e-05
+2026-01-19 04:33:45,523 BoA.train INFO: Epoch[80] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.52e-05
+2026-01-19 04:33:47,969 BoA.train INFO: Epoch[80] Iteration[40/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.52e-05
+2026-01-19 04:33:50,385 BoA.train INFO: Epoch[80] Iteration[50/59] Loss: 0.216, Acc: 1.000, Base Lr: 7.52e-05
+2026-01-19 04:33:52,131 BoA.train INFO: Epoch 80 done. Time per batch: 0.257[s] Speed: 248.6[samples/s]
+2026-01-19 04:33:57,926 BoA.train INFO: Validation Results - Epoch: 80
+2026-01-19 04:33:57,926 BoA.train INFO: mAP: 82.7%
+2026-01-19 04:33:57,926 BoA.train INFO: CMC curve, Rank-1  :86.1%
+2026-01-19 04:33:57,926 BoA.train INFO: CMC curve, Rank-5  :92.3%
+2026-01-19 04:33:57,926 BoA.train INFO: CMC curve, Rank-10 :94.7%
+2026-01-19 04:33:58,237 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:33:58,238 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:33:58,238 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:33:58,238 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:34:01,705 BoA.train INFO: Epoch[81] Iteration[10/59] Loss: 0.218, Acc: 1.000, Base Lr: 7.19e-05
+2026-01-19 04:34:04,256 BoA.train INFO: Epoch[81] Iteration[20/59] Loss: 0.218, Acc: 1.000, Base Lr: 7.19e-05
+2026-01-19 04:34:06,820 BoA.train INFO: Epoch[81] Iteration[30/59] Loss: 0.217, Acc: 1.000, Base Lr: 7.19e-05
+2026-01-19 04:34:09,358 BoA.train INFO: Epoch[81] Iteration[40/59] Loss: 0.217, Acc: 1.000, Base Lr: 7.19e-05
+2026-01-19 04:34:11,757 BoA.train INFO: Epoch[81] Iteration[50/59] Loss: 0.217, Acc: 1.000, Base Lr: 7.19e-05
+2026-01-19 04:34:13,555 BoA.train INFO: Epoch 81 done. Time per batch: 0.265[s] Speed: 241.8[samples/s]
+2026-01-19 04:34:19,436 BoA.train INFO: Validation Results - Epoch: 81
+2026-01-19 04:34:19,436 BoA.train INFO: mAP: 81.6%
+2026-01-19 04:34:19,436 BoA.train INFO: CMC curve, Rank-1  :85.8%
+2026-01-19 04:34:19,436 BoA.train INFO: CMC curve, Rank-5  :90.9%
+2026-01-19 04:34:19,436 BoA.train INFO: CMC curve, Rank-10 :93.8%
+2026-01-19 04:34:19,436 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:34:19,436 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:34:19,436 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:34:19,436 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:34:22,843 BoA.train INFO: Epoch[82] Iteration[10/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.85e-05
+2026-01-19 04:34:25,304 BoA.train INFO: Epoch[82] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.85e-05
+2026-01-19 04:34:27,746 BoA.train INFO: Epoch[82] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.85e-05
+2026-01-19 04:34:30,179 BoA.train INFO: Epoch[82] Iteration[40/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.85e-05
+2026-01-19 04:34:32,587 BoA.train INFO: Epoch[82] Iteration[50/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.85e-05
+2026-01-19 04:34:34,347 BoA.train INFO: Epoch 82 done. Time per batch: 0.257[s] Speed: 248.6[samples/s]
+2026-01-19 04:34:40,182 BoA.train INFO: Validation Results - Epoch: 82
+2026-01-19 04:34:40,182 BoA.train INFO: mAP: 81.9%
+2026-01-19 04:34:40,182 BoA.train INFO: CMC curve, Rank-1  :87.0%
+2026-01-19 04:34:40,182 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:34:40,182 BoA.train INFO: CMC curve, Rank-10 :94.4%
+2026-01-19 04:34:40,182 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:34:40,182 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:34:40,183 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:34:40,183 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:34:43,578 BoA.train INFO: Epoch[83] Iteration[10/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.53e-05
+2026-01-19 04:34:46,031 BoA.train INFO: Epoch[83] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.53e-05
+2026-01-19 04:34:48,486 BoA.train INFO: Epoch[83] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.53e-05
+2026-01-19 04:34:50,958 BoA.train INFO: Epoch[83] Iteration[40/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.53e-05
+2026-01-19 04:34:53,387 BoA.train INFO: Epoch[83] Iteration[50/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.53e-05
+2026-01-19 04:34:55,150 BoA.train INFO: Epoch 83 done. Time per batch: 0.259[s] Speed: 246.6[samples/s]
+2026-01-19 04:35:01,038 BoA.train INFO: Validation Results - Epoch: 83
+2026-01-19 04:35:01,038 BoA.train INFO: mAP: 80.7%
+2026-01-19 04:35:01,038 BoA.train INFO: CMC curve, Rank-1  :84.7%
+2026-01-19 04:35:01,038 BoA.train INFO: CMC curve, Rank-5  :91.1%
+2026-01-19 04:35:01,038 BoA.train INFO: CMC curve, Rank-10 :93.3%
+2026-01-19 04:35:01,038 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:35:01,038 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:35:01,038 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:35:01,038 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:35:04,677 BoA.train INFO: Epoch[84] Iteration[10/59] Loss: 0.217, Acc: 1.000, Base Lr: 6.21e-05
+2026-01-19 04:35:07,132 BoA.train INFO: Epoch[84] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.21e-05
+2026-01-19 04:35:09,617 BoA.train INFO: Epoch[84] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.21e-05
+2026-01-19 04:35:12,092 BoA.train INFO: Epoch[84] Iteration[40/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.21e-05
+2026-01-19 04:35:14,533 BoA.train INFO: Epoch[84] Iteration[50/59] Loss: 0.216, Acc: 1.000, Base Lr: 6.21e-05
+2026-01-19 04:35:16,293 BoA.train INFO: Epoch 84 done. Time per batch: 0.265[s] Speed: 241.9[samples/s]
+2026-01-19 04:35:22,182 BoA.train INFO: Validation Results - Epoch: 84
+2026-01-19 04:35:22,182 BoA.train INFO: mAP: 79.7%
+2026-01-19 04:35:22,182 BoA.train INFO: CMC curve, Rank-1  :83.4%
+2026-01-19 04:35:22,182 BoA.train INFO: CMC curve, Rank-5  :90.0%
+2026-01-19 04:35:22,182 BoA.train INFO: CMC curve, Rank-10 :92.9%
+2026-01-19 04:35:22,182 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:35:22,182 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:35:22,182 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:35:22,182 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:35:25,588 BoA.train INFO: Epoch[85] Iteration[10/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.89e-05
+2026-01-19 04:35:28,077 BoA.train INFO: Epoch[85] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.89e-05
+2026-01-19 04:35:30,566 BoA.train INFO: Epoch[85] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.89e-05
+2026-01-19 04:35:33,029 BoA.train INFO: Epoch[85] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 5.89e-05
+2026-01-19 04:35:35,479 BoA.train INFO: Epoch[85] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 5.89e-05
+2026-01-19 04:35:37,263 BoA.train INFO: Epoch 85 done. Time per batch: 0.261[s] Speed: 244.8[samples/s]
+2026-01-19 04:35:43,090 BoA.train INFO: Validation Results - Epoch: 85
+2026-01-19 04:35:43,090 BoA.train INFO: mAP: 79.8%
+2026-01-19 04:35:43,090 BoA.train INFO: CMC curve, Rank-1  :83.1%
+2026-01-19 04:35:43,090 BoA.train INFO: CMC curve, Rank-5  :90.0%
+2026-01-19 04:35:43,090 BoA.train INFO: CMC curve, Rank-10 :93.1%
+2026-01-19 04:35:43,091 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:35:43,091 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:35:43,091 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:35:43,091 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:35:46,429 BoA.train INFO: Epoch[86] Iteration[10/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.58e-05
+2026-01-19 04:35:48,972 BoA.train INFO: Epoch[86] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.58e-05
+2026-01-19 04:35:51,466 BoA.train INFO: Epoch[86] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.58e-05
+2026-01-19 04:35:53,952 BoA.train INFO: Epoch[86] Iteration[40/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.58e-05
+2026-01-19 04:35:56,418 BoA.train INFO: Epoch[86] Iteration[50/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.58e-05
+2026-01-19 04:35:58,212 BoA.train INFO: Epoch 86 done. Time per batch: 0.262[s] Speed: 244.1[samples/s]
+2026-01-19 04:36:04,082 BoA.train INFO: Validation Results - Epoch: 86
+2026-01-19 04:36:04,082 BoA.train INFO: mAP: 80.7%
+2026-01-19 04:36:04,082 BoA.train INFO: CMC curve, Rank-1  :85.2%
+2026-01-19 04:36:04,082 BoA.train INFO: CMC curve, Rank-5  :90.7%
+2026-01-19 04:36:04,082 BoA.train INFO: CMC curve, Rank-10 :93.4%
+2026-01-19 04:36:04,082 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:36:04,082 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:36:04,082 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:36:04,082 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:36:07,563 BoA.train INFO: Epoch[87] Iteration[10/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.28e-05
+2026-01-19 04:36:10,063 BoA.train INFO: Epoch[87] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.28e-05
+2026-01-19 04:36:12,541 BoA.train INFO: Epoch[87] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.28e-05
+2026-01-19 04:36:15,012 BoA.train INFO: Epoch[87] Iteration[40/59] Loss: 0.216, Acc: 1.000, Base Lr: 5.28e-05
+2026-01-19 04:36:17,520 BoA.train INFO: Epoch[87] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 5.28e-05
+2026-01-19 04:36:19,299 BoA.train INFO: Epoch 87 done. Time per batch: 0.263[s] Speed: 243.2[samples/s]
+2026-01-19 04:36:25,206 BoA.train INFO: Validation Results - Epoch: 87
+2026-01-19 04:36:25,207 BoA.train INFO: mAP: 80.6%
+2026-01-19 04:36:25,207 BoA.train INFO: CMC curve, Rank-1  :85.0%
+2026-01-19 04:36:25,207 BoA.train INFO: CMC curve, Rank-5  :90.3%
+2026-01-19 04:36:25,207 BoA.train INFO: CMC curve, Rank-10 :93.3%
+2026-01-19 04:36:25,207 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:36:25,207 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:36:25,207 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:36:25,207 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:36:28,659 BoA.train INFO: Epoch[88] Iteration[10/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.99e-05
+2026-01-19 04:36:31,209 BoA.train INFO: Epoch[88] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.99e-05
+2026-01-19 04:36:33,759 BoA.train INFO: Epoch[88] Iteration[30/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.99e-05
+2026-01-19 04:36:36,325 BoA.train INFO: Epoch[88] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.99e-05
+2026-01-19 04:36:38,758 BoA.train INFO: Epoch[88] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.99e-05
+2026-01-19 04:36:40,539 BoA.train INFO: Epoch 88 done. Time per batch: 0.266[s] Speed: 240.7[samples/s]
+2026-01-19 04:36:46,491 BoA.train INFO: Validation Results - Epoch: 88
+2026-01-19 04:36:46,492 BoA.train INFO: mAP: 80.5%
+2026-01-19 04:36:46,492 BoA.train INFO: CMC curve, Rank-1  :84.4%
+2026-01-19 04:36:46,492 BoA.train INFO: CMC curve, Rank-5  :91.3%
+2026-01-19 04:36:46,492 BoA.train INFO: CMC curve, Rank-10 :93.2%
+2026-01-19 04:36:46,492 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:36:46,492 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:36:46,492 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:36:46,492 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:36:49,866 BoA.train INFO: Epoch[89] Iteration[10/59] Loss: 0.216, Acc: 1.000, Base Lr: 4.70e-05
+2026-01-19 04:36:52,372 BoA.train INFO: Epoch[89] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 4.70e-05
+2026-01-19 04:36:54,941 BoA.train INFO: Epoch[89] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 4.70e-05
+2026-01-19 04:36:57,472 BoA.train INFO: Epoch[89] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.70e-05
+2026-01-19 04:36:59,943 BoA.train INFO: Epoch[89] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.70e-05
+2026-01-19 04:37:01,713 BoA.train INFO: Epoch 89 done. Time per batch: 0.264[s] Speed: 242.5[samples/s]
+2026-01-19 04:37:07,648 BoA.train INFO: Validation Results - Epoch: 89
+2026-01-19 04:37:07,648 BoA.train INFO: mAP: 81.0%
+2026-01-19 04:37:07,648 BoA.train INFO: CMC curve, Rank-1  :85.2%
+2026-01-19 04:37:07,648 BoA.train INFO: CMC curve, Rank-5  :91.1%
+2026-01-19 04:37:07,648 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:37:07,648 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:37:07,648 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:37:07,648 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:37:07,648 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:37:11,121 BoA.train INFO: Epoch[90] Iteration[10/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.42e-05
+2026-01-19 04:37:13,587 BoA.train INFO: Epoch[90] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.42e-05
+2026-01-19 04:37:16,020 BoA.train INFO: Epoch[90] Iteration[30/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.42e-05
+2026-01-19 04:37:18,462 BoA.train INFO: Epoch[90] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.42e-05
+2026-01-19 04:37:20,885 BoA.train INFO: Epoch[90] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 4.42e-05
+2026-01-19 04:37:22,676 BoA.train INFO: Epoch 90 done. Time per batch: 0.261[s] Speed: 245.7[samples/s]
+2026-01-19 04:37:28,631 BoA.train INFO: Validation Results - Epoch: 90
+2026-01-19 04:37:28,631 BoA.train INFO: mAP: 81.1%
+2026-01-19 04:37:28,631 BoA.train INFO: CMC curve, Rank-1  :85.3%
+2026-01-19 04:37:28,631 BoA.train INFO: CMC curve, Rank-5  :91.3%
+2026-01-19 04:37:28,631 BoA.train INFO: CMC curve, Rank-10 :93.9%
+2026-01-19 04:37:28,631 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:37:28,631 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:37:28,631 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:37:28,631 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:37:32,088 BoA.train INFO: Epoch[91] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 4.15e-05
+2026-01-19 04:37:34,623 BoA.train INFO: Epoch[91] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 4.15e-05
+2026-01-19 04:37:37,171 BoA.train INFO: Epoch[91] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 4.15e-05
+2026-01-19 04:37:39,712 BoA.train INFO: Epoch[91] Iteration[40/59] Loss: 0.217, Acc: 1.000, Base Lr: 4.15e-05
+2026-01-19 04:37:42,142 BoA.train INFO: Epoch[91] Iteration[50/59] Loss: 0.217, Acc: 1.000, Base Lr: 4.15e-05
+2026-01-19 04:37:43,905 BoA.train INFO: Epoch 91 done. Time per batch: 0.265[s] Speed: 241.7[samples/s]
+2026-01-19 04:37:49,818 BoA.train INFO: Validation Results - Epoch: 91
+2026-01-19 04:37:49,818 BoA.train INFO: mAP: 81.2%
+2026-01-19 04:37:49,818 BoA.train INFO: CMC curve, Rank-1  :83.9%
+2026-01-19 04:37:49,818 BoA.train INFO: CMC curve, Rank-5  :90.9%
+2026-01-19 04:37:49,818 BoA.train INFO: CMC curve, Rank-10 :93.3%
+2026-01-19 04:37:49,818 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:37:49,819 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:37:49,819 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:37:49,819 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:37:53,198 BoA.train INFO: Epoch[92] Iteration[10/59] Loss: 0.216, Acc: 1.000, Base Lr: 3.88e-05
+2026-01-19 04:37:55,736 BoA.train INFO: Epoch[92] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.88e-05
+2026-01-19 04:37:58,249 BoA.train INFO: Epoch[92] Iteration[30/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.88e-05
+2026-01-19 04:38:00,778 BoA.train INFO: Epoch[92] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.88e-05
+2026-01-19 04:38:03,212 BoA.train INFO: Epoch[92] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.88e-05
+2026-01-19 04:38:04,995 BoA.train INFO: Epoch 92 done. Time per batch: 0.263[s] Speed: 243.2[samples/s]
+2026-01-19 04:38:10,955 BoA.train INFO: Validation Results - Epoch: 92
+2026-01-19 04:38:10,956 BoA.train INFO: mAP: 82.0%
+2026-01-19 04:38:10,956 BoA.train INFO: CMC curve, Rank-1  :84.1%
+2026-01-19 04:38:10,956 BoA.train INFO: CMC curve, Rank-5  :91.0%
+2026-01-19 04:38:10,956 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:38:10,956 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:38:10,956 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:38:10,956 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:38:10,956 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:38:14,313 BoA.train INFO: Epoch[93] Iteration[10/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.62e-05
+2026-01-19 04:38:16,806 BoA.train INFO: Epoch[93] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.62e-05
+2026-01-19 04:38:19,297 BoA.train INFO: Epoch[93] Iteration[30/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.62e-05
+2026-01-19 04:38:21,779 BoA.train INFO: Epoch[93] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.62e-05
+2026-01-19 04:38:24,244 BoA.train INFO: Epoch[93] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.62e-05
+2026-01-19 04:38:26,251 BoA.train INFO: Epoch 93 done. Time per batch: 0.261[s] Speed: 245.5[samples/s]
+2026-01-19 04:38:32,156 BoA.train INFO: Validation Results - Epoch: 93
+2026-01-19 04:38:32,157 BoA.train INFO: mAP: 82.0%
+2026-01-19 04:38:32,157 BoA.train INFO: CMC curve, Rank-1  :84.9%
+2026-01-19 04:38:32,157 BoA.train INFO: CMC curve, Rank-5  :91.6%
+2026-01-19 04:38:32,157 BoA.train INFO: CMC curve, Rank-10 :94.0%
+2026-01-19 04:38:32,157 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:38:32,157 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:38:32,157 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:38:32,157 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:38:35,541 BoA.train INFO: Epoch[94] Iteration[10/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.37e-05
+2026-01-19 04:38:38,034 BoA.train INFO: Epoch[94] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.37e-05
+2026-01-19 04:38:40,516 BoA.train INFO: Epoch[94] Iteration[30/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.37e-05
+2026-01-19 04:38:43,009 BoA.train INFO: Epoch[94] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.37e-05
+2026-01-19 04:38:45,442 BoA.train INFO: Epoch[94] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.37e-05
+2026-01-19 04:38:47,192 BoA.train INFO: Epoch 94 done. Time per batch: 0.261[s] Speed: 245.5[samples/s]
+2026-01-19 04:38:53,083 BoA.train INFO: Validation Results - Epoch: 94
+2026-01-19 04:38:53,083 BoA.train INFO: mAP: 81.9%
+2026-01-19 04:38:53,083 BoA.train INFO: CMC curve, Rank-1  :85.0%
+2026-01-19 04:38:53,083 BoA.train INFO: CMC curve, Rank-5  :91.7%
+2026-01-19 04:38:53,083 BoA.train INFO: CMC curve, Rank-10 :93.8%
+2026-01-19 04:38:53,083 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:38:53,083 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:38:53,083 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:38:53,083 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:38:56,503 BoA.train INFO: Epoch[95] Iteration[10/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.13e-05
+2026-01-19 04:38:59,032 BoA.train INFO: Epoch[95] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.13e-05
+2026-01-19 04:39:01,494 BoA.train INFO: Epoch[95] Iteration[30/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.13e-05
+2026-01-19 04:39:03,954 BoA.train INFO: Epoch[95] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.13e-05
+2026-01-19 04:39:06,376 BoA.train INFO: Epoch[95] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.13e-05
+2026-01-19 04:39:08,163 BoA.train INFO: Epoch 95 done. Time per batch: 0.261[s] Speed: 244.8[samples/s]
+2026-01-19 04:39:14,088 BoA.train INFO: Validation Results - Epoch: 95
+2026-01-19 04:39:14,088 BoA.train INFO: mAP: 81.8%
+2026-01-19 04:39:14,088 BoA.train INFO: CMC curve, Rank-1  :84.9%
+2026-01-19 04:39:14,088 BoA.train INFO: CMC curve, Rank-5  :92.2%
+2026-01-19 04:39:14,088 BoA.train INFO: CMC curve, Rank-10 :94.1%
+2026-01-19 04:39:14,088 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:39:14,088 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:39:14,088 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:39:14,088 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:39:17,474 BoA.train INFO: Epoch[96] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.89e-05
+2026-01-19 04:39:20,062 BoA.train INFO: Epoch[96] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.89e-05
+2026-01-19 04:39:22,556 BoA.train INFO: Epoch[96] Iteration[30/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.89e-05
+2026-01-19 04:39:24,968 BoA.train INFO: Epoch[96] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.89e-05
+2026-01-19 04:39:27,391 BoA.train INFO: Epoch[96] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.89e-05
+2026-01-19 04:39:29,178 BoA.train INFO: Epoch 96 done. Time per batch: 0.262[s] Speed: 244.7[samples/s]
+2026-01-19 04:39:34,905 BoA.train INFO: Validation Results - Epoch: 96
+2026-01-19 04:39:34,905 BoA.train INFO: mAP: 81.4%
+2026-01-19 04:39:34,905 BoA.train INFO: CMC curve, Rank-1  :84.3%
+2026-01-19 04:39:34,905 BoA.train INFO: CMC curve, Rank-5  :91.6%
+2026-01-19 04:39:34,905 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:39:34,905 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:39:34,905 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:39:34,905 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:39:34,905 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:39:38,279 BoA.train INFO: Epoch[97] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.67e-05
+2026-01-19 04:39:40,729 BoA.train INFO: Epoch[97] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.67e-05
+2026-01-19 04:39:43,193 BoA.train INFO: Epoch[97] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.67e-05
+2026-01-19 04:39:45,681 BoA.train INFO: Epoch[97] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.67e-05
+2026-01-19 04:39:48,087 BoA.train INFO: Epoch[97] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.67e-05
+2026-01-19 04:39:49,870 BoA.train INFO: Epoch 97 done. Time per batch: 0.259[s] Speed: 246.7[samples/s]
+2026-01-19 04:39:55,712 BoA.train INFO: Validation Results - Epoch: 97
+2026-01-19 04:39:55,712 BoA.train INFO: mAP: 81.3%
+2026-01-19 04:39:55,712 BoA.train INFO: CMC curve, Rank-1  :84.3%
+2026-01-19 04:39:55,713 BoA.train INFO: CMC curve, Rank-5  :91.7%
+2026-01-19 04:39:55,713 BoA.train INFO: CMC curve, Rank-10 :93.4%
+2026-01-19 04:39:55,713 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:39:55,713 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:39:55,713 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:39:55,713 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:39:59,126 BoA.train INFO: Epoch[98] Iteration[10/59] Loss: 0.219, Acc: 1.000, Base Lr: 2.45e-05
+2026-01-19 04:40:01,544 BoA.train INFO: Epoch[98] Iteration[20/59] Loss: 0.216, Acc: 1.000, Base Lr: 2.45e-05
+2026-01-19 04:40:03,975 BoA.train INFO: Epoch[98] Iteration[30/59] Loss: 0.216, Acc: 1.000, Base Lr: 2.45e-05
+2026-01-19 04:40:06,412 BoA.train INFO: Epoch[98] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.45e-05
+2026-01-19 04:40:08,846 BoA.train INFO: Epoch[98] Iteration[50/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.45e-05
+2026-01-19 04:40:10,609 BoA.train INFO: Epoch 98 done. Time per batch: 0.258[s] Speed: 248.0[samples/s]
+2026-01-19 04:40:16,612 BoA.train INFO: Validation Results - Epoch: 98
+2026-01-19 04:40:16,612 BoA.train INFO: mAP: 81.2%
+2026-01-19 04:40:16,612 BoA.train INFO: CMC curve, Rank-1  :84.7%
+2026-01-19 04:40:16,612 BoA.train INFO: CMC curve, Rank-5  :91.7%
+2026-01-19 04:40:16,612 BoA.train INFO: CMC curve, Rank-10 :93.3%
+2026-01-19 04:40:16,612 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:40:16,612 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:40:16,612 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:40:16,612 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:40:20,088 BoA.train INFO: Epoch[99] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.24e-05
+2026-01-19 04:40:22,584 BoA.train INFO: Epoch[99] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.24e-05
+2026-01-19 04:40:25,086 BoA.train INFO: Epoch[99] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.24e-05
+2026-01-19 04:40:27,615 BoA.train INFO: Epoch[99] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.24e-05
+2026-01-19 04:40:30,131 BoA.train INFO: Epoch[99] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.24e-05
+2026-01-19 04:40:31,931 BoA.train INFO: Epoch 99 done. Time per batch: 0.266[s] Speed: 240.9[samples/s]
+2026-01-19 04:40:37,880 BoA.train INFO: Validation Results - Epoch: 99
+2026-01-19 04:40:37,880 BoA.train INFO: mAP: 81.6%
+2026-01-19 04:40:37,880 BoA.train INFO: CMC curve, Rank-1  :84.8%
+2026-01-19 04:40:37,880 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:40:37,880 BoA.train INFO: CMC curve, Rank-10 :93.4%
+2026-01-19 04:40:37,880 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:40:37,880 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:40:37,880 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:40:37,880 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:40:41,354 BoA.train INFO: Epoch[100] Iteration[10/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.04e-05
+2026-01-19 04:40:43,798 BoA.train INFO: Epoch[100] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.04e-05
+2026-01-19 04:40:46,217 BoA.train INFO: Epoch[100] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.04e-05
+2026-01-19 04:40:48,645 BoA.train INFO: Epoch[100] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.04e-05
+2026-01-19 04:40:51,061 BoA.train INFO: Epoch[100] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.04e-05
+2026-01-19 04:40:52,828 BoA.train INFO: Epoch 100 done. Time per batch: 0.259[s] Speed: 247.0[samples/s]
+2026-01-19 04:40:58,740 BoA.train INFO: Validation Results - Epoch: 100
+2026-01-19 04:40:58,740 BoA.train INFO: mAP: 81.7%
+2026-01-19 04:40:58,740 BoA.train INFO: CMC curve, Rank-1  :85.3%
+2026-01-19 04:40:58,740 BoA.train INFO: CMC curve, Rank-5  :91.4%
+2026-01-19 04:40:58,740 BoA.train INFO: CMC curve, Rank-10 :93.4%
+2026-01-19 04:40:58,740 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:40:58,740 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:40:58,740 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:40:58,740 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:41:02,215 BoA.train INFO: Epoch[101] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.85e-05
+2026-01-19 04:41:04,684 BoA.train INFO: Epoch[101] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.85e-05
+2026-01-19 04:41:07,144 BoA.train INFO: Epoch[101] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.85e-05
+2026-01-19 04:41:09,615 BoA.train INFO: Epoch[101] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.85e-05
+2026-01-19 04:41:12,064 BoA.train INFO: Epoch[101] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.85e-05
+2026-01-19 04:41:13,854 BoA.train INFO: Epoch 101 done. Time per batch: 0.262[s] Speed: 244.3[samples/s]
+2026-01-19 04:41:19,735 BoA.train INFO: Validation Results - Epoch: 101
+2026-01-19 04:41:19,735 BoA.train INFO: mAP: 81.7%
+2026-01-19 04:41:19,735 BoA.train INFO: CMC curve, Rank-1  :85.0%
+2026-01-19 04:41:19,735 BoA.train INFO: CMC curve, Rank-5  :91.4%
+2026-01-19 04:41:19,735 BoA.train INFO: CMC curve, Rank-10 :93.3%
+2026-01-19 04:41:19,735 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:41:19,735 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:41:19,735 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:41:19,735 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:41:23,268 BoA.train INFO: Epoch[102] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.66e-05
+2026-01-19 04:41:25,711 BoA.train INFO: Epoch[102] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.66e-05
+2026-01-19 04:41:28,177 BoA.train INFO: Epoch[102] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.66e-05
+2026-01-19 04:41:30,623 BoA.train INFO: Epoch[102] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.66e-05
+2026-01-19 04:41:33,054 BoA.train INFO: Epoch[102] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.66e-05
+2026-01-19 04:41:34,823 BoA.train INFO: Epoch 102 done. Time per batch: 0.261[s] Speed: 245.3[samples/s]
+2026-01-19 04:41:40,715 BoA.train INFO: Validation Results - Epoch: 102
+2026-01-19 04:41:40,716 BoA.train INFO: mAP: 82.2%
+2026-01-19 04:41:40,716 BoA.train INFO: CMC curve, Rank-1  :85.4%
+2026-01-19 04:41:40,716 BoA.train INFO: CMC curve, Rank-5  :91.1%
+2026-01-19 04:41:40,716 BoA.train INFO: CMC curve, Rank-10 :93.4%
+2026-01-19 04:41:40,716 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:41:40,716 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:41:40,716 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:41:40,716 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:41:44,058 BoA.train INFO: Epoch[103] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.49e-05
+2026-01-19 04:41:46,481 BoA.train INFO: Epoch[103] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.49e-05
+2026-01-19 04:41:48,904 BoA.train INFO: Epoch[103] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.49e-05
+2026-01-19 04:41:51,368 BoA.train INFO: Epoch[103] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.49e-05
+2026-01-19 04:41:53,862 BoA.train INFO: Epoch[103] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.49e-05
+2026-01-19 04:41:55,629 BoA.train INFO: Epoch 103 done. Time per batch: 0.259[s] Speed: 247.6[samples/s]
+2026-01-19 04:42:01,545 BoA.train INFO: Validation Results - Epoch: 103
+2026-01-19 04:42:01,546 BoA.train INFO: mAP: 82.3%
+2026-01-19 04:42:01,546 BoA.train INFO: CMC curve, Rank-1  :85.6%
+2026-01-19 04:42:01,546 BoA.train INFO: CMC curve, Rank-5  :91.6%
+2026-01-19 04:42:01,546 BoA.train INFO: CMC curve, Rank-10 :93.4%
+2026-01-19 04:42:01,546 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:42:01,546 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:42:01,546 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:42:01,546 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:42:05,717 BoA.train INFO: Epoch[104] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.33e-05
+2026-01-19 04:42:08,207 BoA.train INFO: Epoch[104] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.33e-05
+2026-01-19 04:42:10,672 BoA.train INFO: Epoch[104] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.33e-05
+2026-01-19 04:42:13,122 BoA.train INFO: Epoch[104] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.33e-05
+2026-01-19 04:42:15,539 BoA.train INFO: Epoch[104] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.33e-05
+2026-01-19 04:42:17,317 BoA.train INFO: Epoch 104 done. Time per batch: 0.262[s] Speed: 244.2[samples/s]
+2026-01-19 04:42:23,192 BoA.train INFO: Validation Results - Epoch: 104
+2026-01-19 04:42:23,192 BoA.train INFO: mAP: 82.3%
+2026-01-19 04:42:23,192 BoA.train INFO: CMC curve, Rank-1  :85.6%
+2026-01-19 04:42:23,192 BoA.train INFO: CMC curve, Rank-5  :91.6%
+2026-01-19 04:42:23,192 BoA.train INFO: CMC curve, Rank-10 :93.8%
+2026-01-19 04:42:23,192 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:42:23,192 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:42:23,192 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:42:23,192 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:42:26,759 BoA.train INFO: Epoch[105] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.17e-05
+2026-01-19 04:42:29,263 BoA.train INFO: Epoch[105] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.17e-05
+2026-01-19 04:42:31,791 BoA.train INFO: Epoch[105] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.17e-05
+2026-01-19 04:42:34,306 BoA.train INFO: Epoch[105] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.17e-05
+2026-01-19 04:42:36,761 BoA.train INFO: Epoch[105] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.17e-05
+2026-01-19 04:42:38,531 BoA.train INFO: Epoch 105 done. Time per batch: 0.266[s] Speed: 240.6[samples/s]
+2026-01-19 04:42:44,478 BoA.train INFO: Validation Results - Epoch: 105
+2026-01-19 04:42:44,478 BoA.train INFO: mAP: 82.4%
+2026-01-19 04:42:44,478 BoA.train INFO: CMC curve, Rank-1  :86.0%
+2026-01-19 04:42:44,479 BoA.train INFO: CMC curve, Rank-5  :91.7%
+2026-01-19 04:42:44,479 BoA.train INFO: CMC curve, Rank-10 :93.8%
+2026-01-19 04:42:44,479 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:42:44,479 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:42:44,479 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:42:44,479 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:42:47,978 BoA.train INFO: Epoch[106] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.03e-05
+2026-01-19 04:42:50,476 BoA.train INFO: Epoch[106] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.03e-05
+2026-01-19 04:42:53,023 BoA.train INFO: Epoch[106] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.03e-05
+2026-01-19 04:42:55,587 BoA.train INFO: Epoch[106] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.03e-05
+2026-01-19 04:42:58,036 BoA.train INFO: Epoch[106] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.03e-05
+2026-01-19 04:43:00,054 BoA.train INFO: Epoch 106 done. Time per batch: 0.265[s] Speed: 241.2[samples/s]
+2026-01-19 04:43:05,915 BoA.train INFO: Validation Results - Epoch: 106
+2026-01-19 04:43:05,915 BoA.train INFO: mAP: 82.5%
+2026-01-19 04:43:05,915 BoA.train INFO: CMC curve, Rank-1  :85.9%
+2026-01-19 04:43:05,915 BoA.train INFO: CMC curve, Rank-5  :91.6%
+2026-01-19 04:43:05,915 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:43:05,915 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:43:05,915 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:43:05,915 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:43:05,915 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:43:09,303 BoA.train INFO: Epoch[107] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 8.90e-06
+2026-01-19 04:43:11,824 BoA.train INFO: Epoch[107] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 8.90e-06
+2026-01-19 04:43:14,293 BoA.train INFO: Epoch[107] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 8.90e-06
+2026-01-19 04:43:16,729 BoA.train INFO: Epoch[107] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 8.90e-06
+2026-01-19 04:43:19,153 BoA.train INFO: Epoch[107] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 8.90e-06
+2026-01-19 04:43:20,952 BoA.train INFO: Epoch 107 done. Time per batch: 0.261[s] Speed: 245.5[samples/s]
+2026-01-19 04:43:26,881 BoA.train INFO: Validation Results - Epoch: 107
+2026-01-19 04:43:26,881 BoA.train INFO: mAP: 82.3%
+2026-01-19 04:43:26,881 BoA.train INFO: CMC curve, Rank-1  :86.1%
+2026-01-19 04:43:26,881 BoA.train INFO: CMC curve, Rank-5  :91.7%
+2026-01-19 04:43:26,881 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:43:26,881 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:43:26,881 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:43:26,881 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:43:26,881 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:43:30,300 BoA.train INFO: Epoch[108] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.63e-06
+2026-01-19 04:43:32,782 BoA.train INFO: Epoch[108] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.63e-06
+2026-01-19 04:43:35,247 BoA.train INFO: Epoch[108] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.63e-06
+2026-01-19 04:43:37,703 BoA.train INFO: Epoch[108] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.63e-06
+2026-01-19 04:43:40,152 BoA.train INFO: Epoch[108] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.63e-06
+2026-01-19 04:43:41,933 BoA.train INFO: Epoch 108 done. Time per batch: 0.261[s] Speed: 245.2[samples/s]
+2026-01-19 04:43:47,843 BoA.train INFO: Validation Results - Epoch: 108
+2026-01-19 04:43:47,844 BoA.train INFO: mAP: 82.3%
+2026-01-19 04:43:47,844 BoA.train INFO: CMC curve, Rank-1  :86.0%
+2026-01-19 04:43:47,844 BoA.train INFO: CMC curve, Rank-5  :91.7%
+2026-01-19 04:43:47,844 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:43:47,844 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:43:47,844 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:43:47,844 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:43:47,844 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:43:52,241 BoA.train INFO: Epoch[109] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 6.47e-06
+2026-01-19 04:43:54,772 BoA.train INFO: Epoch[109] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 6.47e-06
+2026-01-19 04:43:57,311 BoA.train INFO: Epoch[109] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 6.47e-06
+2026-01-19 04:43:59,859 BoA.train INFO: Epoch[109] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 6.47e-06
+2026-01-19 04:44:02,288 BoA.train INFO: Epoch[109] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 6.47e-06
+2026-01-19 04:44:04,077 BoA.train INFO: Epoch 109 done. Time per batch: 0.270[s] Speed: 237.4[samples/s]
+2026-01-19 04:44:10,014 BoA.train INFO: Validation Results - Epoch: 109
+2026-01-19 04:44:10,015 BoA.train INFO: mAP: 82.3%
+2026-01-19 04:44:10,015 BoA.train INFO: CMC curve, Rank-1  :86.1%
+2026-01-19 04:44:10,015 BoA.train INFO: CMC curve, Rank-5  :91.9%
+2026-01-19 04:44:10,015 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:44:10,015 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:44:10,015 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:44:10,015 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:44:10,015 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:44:13,499 BoA.train INFO: Epoch[110] Iteration[10/59] Loss: 0.213, Acc: 1.000, Base Lr: 5.41e-06
+2026-01-19 04:44:16,080 BoA.train INFO: Epoch[110] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 5.41e-06
+2026-01-19 04:44:18,616 BoA.train INFO: Epoch[110] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 5.41e-06
+2026-01-19 04:44:21,236 BoA.train INFO: Epoch[110] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 5.41e-06
+2026-01-19 04:44:23,653 BoA.train INFO: Epoch[110] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 5.41e-06
+2026-01-19 04:44:25,410 BoA.train INFO: Epoch 110 done. Time per batch: 0.267[s] Speed: 239.9[samples/s]
+2026-01-19 04:44:31,313 BoA.train INFO: Validation Results - Epoch: 110
+2026-01-19 04:44:31,313 BoA.train INFO: mAP: 82.3%
+2026-01-19 04:44:31,313 BoA.train INFO: CMC curve, Rank-1  :86.1%
+2026-01-19 04:44:31,313 BoA.train INFO: CMC curve, Rank-5  :91.6%
+2026-01-19 04:44:31,313 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:44:31,313 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:44:31,314 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:44:31,314 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:44:31,314 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:44:34,654 BoA.train INFO: Epoch[111] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 4.44e-06
+2026-01-19 04:44:37,097 BoA.train INFO: Epoch[111] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 4.44e-06
+2026-01-19 04:44:39,543 BoA.train INFO: Epoch[111] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 4.44e-06
+2026-01-19 04:44:41,999 BoA.train INFO: Epoch[111] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 4.44e-06
+2026-01-19 04:44:44,445 BoA.train INFO: Epoch[111] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 4.44e-06
+2026-01-19 04:44:46,210 BoA.train INFO: Epoch 111 done. Time per batch: 0.258[s] Speed: 247.8[samples/s]
+2026-01-19 04:44:52,108 BoA.train INFO: Validation Results - Epoch: 111
+2026-01-19 04:44:52,108 BoA.train INFO: mAP: 82.3%
+2026-01-19 04:44:52,108 BoA.train INFO: CMC curve, Rank-1  :86.0%
+2026-01-19 04:44:52,108 BoA.train INFO: CMC curve, Rank-5  :91.6%
+2026-01-19 04:44:52,108 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:44:52,108 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:44:52,108 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:44:52,108 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:44:52,108 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:44:55,542 BoA.train INFO: Epoch[112] Iteration[10/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.57e-06
+2026-01-19 04:44:58,057 BoA.train INFO: Epoch[112] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 3.57e-06
+2026-01-19 04:45:00,546 BoA.train INFO: Epoch[112] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.57e-06
+2026-01-19 04:45:03,017 BoA.train INFO: Epoch[112] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.57e-06
+2026-01-19 04:45:05,461 BoA.train INFO: Epoch[112] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.57e-06
+2026-01-19 04:45:07,243 BoA.train INFO: Epoch 112 done. Time per batch: 0.262[s] Speed: 243.9[samples/s]
+2026-01-19 04:45:13,141 BoA.train INFO: Validation Results - Epoch: 112
+2026-01-19 04:45:13,141 BoA.train INFO: mAP: 82.3%
+2026-01-19 04:45:13,141 BoA.train INFO: CMC curve, Rank-1  :86.1%
+2026-01-19 04:45:13,142 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:45:13,142 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:45:13,142 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:45:13,142 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:45:13,142 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:45:13,142 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:45:16,588 BoA.train INFO: Epoch[113] Iteration[10/59] Loss: 0.213, Acc: 1.000, Base Lr: 2.81e-06
+2026-01-19 04:45:19,058 BoA.train INFO: Epoch[113] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.81e-06
+2026-01-19 04:45:21,502 BoA.train INFO: Epoch[113] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.81e-06
+2026-01-19 04:45:23,975 BoA.train INFO: Epoch[113] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.81e-06
+2026-01-19 04:45:26,394 BoA.train INFO: Epoch[113] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.81e-06
+2026-01-19 04:45:28,147 BoA.train INFO: Epoch 113 done. Time per batch: 0.260[s] Speed: 246.0[samples/s]
+2026-01-19 04:45:34,105 BoA.train INFO: Validation Results - Epoch: 113
+2026-01-19 04:45:34,105 BoA.train INFO: mAP: 82.2%
+2026-01-19 04:45:34,105 BoA.train INFO: CMC curve, Rank-1  :86.0%
+2026-01-19 04:45:34,105 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:45:34,105 BoA.train INFO: CMC curve, Rank-10 :93.7%
+2026-01-19 04:45:34,105 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:45:34,105 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:45:34,105 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:45:34,105 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:45:37,637 BoA.train INFO: Epoch[114] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.14e-06
+2026-01-19 04:45:40,180 BoA.train INFO: Epoch[114] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.14e-06
+2026-01-19 04:45:42,632 BoA.train INFO: Epoch[114] Iteration[30/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.14e-06
+2026-01-19 04:45:45,071 BoA.train INFO: Epoch[114] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 2.14e-06
+2026-01-19 04:45:47,496 BoA.train INFO: Epoch[114] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 2.14e-06
+2026-01-19 04:45:49,275 BoA.train INFO: Epoch 114 done. Time per batch: 0.263[s] Speed: 243.3[samples/s]
+2026-01-19 04:45:55,146 BoA.train INFO: Validation Results - Epoch: 114
+2026-01-19 04:45:55,147 BoA.train INFO: mAP: 82.2%
+2026-01-19 04:45:55,147 BoA.train INFO: CMC curve, Rank-1  :85.8%
+2026-01-19 04:45:55,147 BoA.train INFO: CMC curve, Rank-5  :91.6%
+2026-01-19 04:45:55,147 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:45:55,147 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:45:55,147 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:45:55,147 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:45:55,147 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:45:58,613 BoA.train INFO: Epoch[115] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.58e-06
+2026-01-19 04:46:01,111 BoA.train INFO: Epoch[115] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.58e-06
+2026-01-19 04:46:03,598 BoA.train INFO: Epoch[115] Iteration[30/59] Loss: 0.215, Acc: 1.000, Base Lr: 1.58e-06
+2026-01-19 04:46:06,050 BoA.train INFO: Epoch[115] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 1.58e-06
+2026-01-19 04:46:08,478 BoA.train INFO: Epoch[115] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.58e-06
+2026-01-19 04:46:10,250 BoA.train INFO: Epoch 115 done. Time per batch: 0.262[s] Speed: 244.5[samples/s]
+2026-01-19 04:46:16,157 BoA.train INFO: Validation Results - Epoch: 115
+2026-01-19 04:46:16,157 BoA.train INFO: mAP: 82.2%
+2026-01-19 04:46:16,157 BoA.train INFO: CMC curve, Rank-1  :85.8%
+2026-01-19 04:46:16,157 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:46:16,157 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:46:16,157 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:46:16,157 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:46:16,157 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:46:16,157 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:46:19,613 BoA.train INFO: Epoch[116] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.12e-06
+2026-01-19 04:46:22,114 BoA.train INFO: Epoch[116] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.12e-06
+2026-01-19 04:46:24,581 BoA.train INFO: Epoch[116] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.12e-06
+2026-01-19 04:46:27,035 BoA.train INFO: Epoch[116] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.12e-06
+2026-01-19 04:46:29,449 BoA.train INFO: Epoch[116] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 1.12e-06
+2026-01-19 04:46:31,204 BoA.train INFO: Epoch 116 done. Time per batch: 0.261[s] Speed: 245.3[samples/s]
+2026-01-19 04:46:37,026 BoA.train INFO: Validation Results - Epoch: 116
+2026-01-19 04:46:37,026 BoA.train INFO: mAP: 82.2%
+2026-01-19 04:46:37,026 BoA.train INFO: CMC curve, Rank-1  :85.8%
+2026-01-19 04:46:37,026 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:46:37,026 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:46:37,026 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:46:37,027 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:46:37,027 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:46:37,027 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:46:40,509 BoA.train INFO: Epoch[117] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.62e-07
+2026-01-19 04:46:43,016 BoA.train INFO: Epoch[117] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.62e-07
+2026-01-19 04:46:45,510 BoA.train INFO: Epoch[117] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.62e-07
+2026-01-19 04:46:48,010 BoA.train INFO: Epoch[117] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.62e-07
+2026-01-19 04:46:50,437 BoA.train INFO: Epoch[117] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 7.62e-07
+2026-01-19 04:46:52,437 BoA.train INFO: Epoch 117 done. Time per batch: 0.262[s] Speed: 243.8[samples/s]
+2026-01-19 04:46:58,284 BoA.train INFO: Validation Results - Epoch: 117
+2026-01-19 04:46:58,284 BoA.train INFO: mAP: 82.3%
+2026-01-19 04:46:58,284 BoA.train INFO: CMC curve, Rank-1  :85.8%
+2026-01-19 04:46:58,285 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:46:58,285 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:46:58,285 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:46:58,285 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:46:58,285 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:46:58,285 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:47:01,787 BoA.train INFO: Epoch[118] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 5.05e-07
+2026-01-19 04:47:04,271 BoA.train INFO: Epoch[118] Iteration[20/59] Loss: 0.215, Acc: 1.000, Base Lr: 5.05e-07
+2026-01-19 04:47:06,716 BoA.train INFO: Epoch[118] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 5.05e-07
+2026-01-19 04:47:09,138 BoA.train INFO: Epoch[118] Iteration[40/59] Loss: 0.215, Acc: 1.000, Base Lr: 5.05e-07
+2026-01-19 04:47:11,526 BoA.train INFO: Epoch[118] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 5.05e-07
+2026-01-19 04:47:13,308 BoA.train INFO: Epoch 118 done. Time per batch: 0.259[s] Speed: 247.0[samples/s]
+2026-01-19 04:47:19,169 BoA.train INFO: Validation Results - Epoch: 118
+2026-01-19 04:47:19,169 BoA.train INFO: mAP: 82.2%
+2026-01-19 04:47:19,169 BoA.train INFO: CMC curve, Rank-1  :85.8%
+2026-01-19 04:47:19,169 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:47:19,169 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:47:19,169 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:47:19,169 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:47:19,169 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:47:19,169 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:47:22,556 BoA.train INFO: Epoch[119] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.51e-07
+2026-01-19 04:47:25,089 BoA.train INFO: Epoch[119] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.51e-07
+2026-01-19 04:47:27,583 BoA.train INFO: Epoch[119] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.51e-07
+2026-01-19 04:47:30,028 BoA.train INFO: Epoch[119] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.51e-07
+2026-01-19 04:47:32,443 BoA.train INFO: Epoch[119] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.51e-07
+2026-01-19 04:47:34,210 BoA.train INFO: Epoch 119 done. Time per batch: 0.261[s] Speed: 245.4[samples/s]
+2026-01-19 04:47:40,022 BoA.train INFO: Validation Results - Epoch: 119
+2026-01-19 04:47:40,023 BoA.train INFO: mAP: 82.2%
+2026-01-19 04:47:40,023 BoA.train INFO: CMC curve, Rank-1  :85.8%
+2026-01-19 04:47:40,023 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:47:40,023 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:47:40,023 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:47:40,023 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:47:40,023 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:47:40,023 BoA.train INFO: Best Rank-10: 94.7%
+2026-01-19 04:47:43,448 BoA.train INFO: Epoch[120] Iteration[10/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.00e-07
+2026-01-19 04:47:45,923 BoA.train INFO: Epoch[120] Iteration[20/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.00e-07
+2026-01-19 04:47:48,422 BoA.train INFO: Epoch[120] Iteration[30/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.00e-07
+2026-01-19 04:47:50,891 BoA.train INFO: Epoch[120] Iteration[40/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.00e-07
+2026-01-19 04:47:53,333 BoA.train INFO: Epoch[120] Iteration[50/59] Loss: 0.214, Acc: 1.000, Base Lr: 3.00e-07
+2026-01-19 04:47:55,103 BoA.train INFO: Epoch 120 done. Time per batch: 0.261[s] Speed: 244.8[samples/s]
+2026-01-19 04:48:01,262 BoA.train INFO: Validation Results - Epoch: 120
+2026-01-19 04:48:01,262 BoA.train INFO: mAP: 82.2%
+2026-01-19 04:48:01,263 BoA.train INFO: CMC curve, Rank-1  :85.8%
+2026-01-19 04:48:01,263 BoA.train INFO: CMC curve, Rank-5  :91.5%
+2026-01-19 04:48:01,263 BoA.train INFO: CMC curve, Rank-10 :93.5%
+2026-01-19 04:48:01,263 BoA.train INFO: Best mAP: 82.7%
+2026-01-19 04:48:01,263 BoA.train INFO: Best Rank-1: 86.1%
+2026-01-19 04:48:01,263 BoA.train INFO: Best Rank-5: 92.3%
+2026-01-19 04:48:01,263 BoA.train INFO: Best Rank-10: 94.7%
